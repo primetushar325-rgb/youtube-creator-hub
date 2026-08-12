@@ -2,32 +2,131 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>YouTube Creator Hub</title>
-<meta name="description" content="48 AI tools for YouTube creators: titles, scripts, TTS, STT, thumbnails, SEO, calculators and more." />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>YouTube Creator Hub — 48 AI Tools for Creators</title>
+<meta name="description" content="A mobile-first AI-powered YouTube Creator Hub: titles, scripts, TTS, STT, thumbnails, SEO, calculators and more." />
 <meta name="theme-color" content="#0f0f10" />
-<style>
-  :root{--bg:#ffffff;--fg:#111;--muted:#666;--line:#ececec;--yellow:#ffd60a;}
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-  .wrap{max-width:680px;width:100%;text-align:center}
-  .brand{font-weight:800;letter-spacing:.5px;font-size:14px;color:var(--muted);text-transform:uppercase;margin-bottom:18px}
-  h1{font-size:clamp(28px,5vw,44px);font-weight:800;line-height:1.15;margin-bottom:14px}
-  p.lead{color:var(--muted);font-size:16px;max-width:560px;margin:0 auto 28px;line-height:1.6}
-  .hub-btn{display:inline-block;padding:16px 30px;border-radius:14px;background:#111;color:#fff;text-decoration:none;font-weight:700;font-size:16px;border:2px solid var(--yellow);box-shadow:0 0 30px rgba(255,214,10,.4);transition:transform .2s}
-  .hub-btn:hover{transform:translateY(-2px)}
-  .note{margin-top:26px;color:var(--muted);font-size:13px}
-  .pill{display:inline-block;margin-bottom:14px;padding:6px 14px;border-radius:999px;background:var(--yellow);color:#111;font-weight:700;font-size:13px}
-</style>
+<link rel="stylesheet" href="./styles.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <main class="wrap">
-    <div class="brand">YouTube Creator Hub</div>
-    <span class="pill">48 AI Tools · Mobile-first</span>
-    <h1>Everything you need to grow on YouTube.</h1>
-    <p class="lead">Generate titles, scripts, voiceovers, thumbnails, captions, SEO and more — each tool purpose-built for the job.</p>
-    <a class="hub-btn" href="./youtube-hub/index.html">Open Creator Hub &rarr;</a>
-    <p class="note">Black · White · Yellow · Fast · Free</p>
-  </main>
+
+<header class="topnav" id="topnav">
+  <div class="nav-inner">
+    <a href="#/tools" class="brand" aria-label="Home">
+      <svg class="brand-logo" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+        <path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2C2 8.8 2 12 2 12s0 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8C22 15.2 22 12 22 12s0-3.2-.4-4.8Z" fill="#ffd60a" stroke="#111" stroke-width="1.2"/>
+        <path d="M10 15.5v-7l6 3.5-6 3.5Z" fill="#111"/>
+      </svg>
+      <span class="brand-text">YouTube Creator Hub</span>
+    </a>
+    <div class="nav-actions" style="margin-left:auto">
+      <button id="askBtn" class="tb-btn ask-quick" title="Ask AI">Ask AI</button>
+      <button id="favBtn" class="icon-btn" title="Favorites" aria-label="Favorites">&#10084;</button>
+    </div>
+  </div>
+</header>
+
+<main id="app" class="app"></main>
+
+<footer class="site-footer">
+  <div class="foot-bottom">
+    <span>&copy; <span id="year"></span> YouTube Creator Hub</span>
+    <span class="muted">Black · White · Yellow</span>
+  </div>
+</footer>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<div id="modalRoot"></div>
+
+<!-- Home / Tools grid template -->
+<template id="tpl-tools">
+  <section class="container section">
+    <div class="page-head">
+      <h1>All Tools</h1>
+      <p class="muted">48 AI tools for YouTube creators. Tap any tool to open its purpose-built form.</p>
+      <div class="filter-bar">
+        <div class="chips" id="catChips"></div>
+      </div>
+    </div>
+    <div id="toolsGrid" class="grid grid-4"></div>
+  </section>
+</template>
+
+<!-- Tool page template (dynamic form injected into #toolFields) -->
+<template id="tpl-tool">
+  <section class="container section tool-page">
+    <div class="tool-head">
+      <a href="#/tools" class="back-link">&larr; All tools</a>
+      <div class="tool-title">
+        <div class="tool-icon" id="toolIcon"></div>
+        <div>
+          <h1 id="toolTitle"></h1>
+          <p id="toolDesc" class="muted bangla"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="toolbar">
+        <div class="tb-left">
+          <button class="tb-btn" data-act="fav" title="Favorite">&#10084; <span>Favorite</span></button>
+          <button class="tb-btn" data-act="save" title="Save">&#128190; <span>Save</span></button>
+          <button class="tb-btn" data-act="history" title="History">&#9203; <span>History</span></button>
+          <button class="tb-btn" data-act="share" title="Share">&#8644; <span>Share</span></button>
+        </div>
+        <div class="tb-right">
+          <button class="tb-btn" data-act="clear" title="Clear">&#10005; <span>Clear</span></button>
+        </div>
+      </div>
+
+      <div class="tool-body">
+        <div class="input-col">
+          <div id="toolFields"></div>
+          <button id="generateBtn" class="btn btn-primary btn-block">
+            <span class="btn-label">Generate</span>
+            <span class="spinner" hidden></span>
+          </button>
+          <div id="errBox" class="error-box" hidden></div>
+        </div>
+        <div class="output-col">
+          <div class="output-head">
+            <span class="label">Result</span>
+            <button id="copyBtn" class="tb-btn small" title="Copy">Copy</button>
+          </div>
+          <div id="toolOutput" class="output" aria-live="polite">
+            <div class="empty-state"><p>Your generated result will appear here.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
+
+<!-- Ask AI template -->
+<template id="tpl-askai">
+  <section class="container section askai">
+    <div class="page-head">
+      <a href="#/tools" class="back-link">&larr; All tools</a>
+      <h1>Ask AI</h1>
+      <p class="muted">Ask any YouTube-strategy question and get a structured expert answer.</p>
+    </div>
+    <div class="tool-card">
+      <div class="input-col" style="padding:18px">
+        <label class="label">Your question</label>
+        <textarea id="aiQ" class="textarea" rows="4" placeholder="e.g. How do I grow from 1K to 10K subscribers?"></textarea>
+        <button id="aiSubmit" class="btn btn-primary btn-block">Get Answer</button>
+        <div id="aiErr" class="error-box" hidden></div>
+      </div>
+      <div id="aiOut" class="ai-report" style="padding:18px"></div>
+    </div>
+  </section>
+</template>
+
+<script src="./data.js" defer></script>
+<script src="./toolfields.js" defer></script>
+<script src="./app.js" defer></script>
 </body>
 </html>
