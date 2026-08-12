@@ -377,6 +377,60 @@
       sys:"You are a subtitle formatter. Convert this raw transcript into a properly timed SRT-style format with sensible timestamp intervals and clean line breaks."
     },
 
+    // ===== ADVANCED STRATEGY =====
+    "retention-advisor": {
+      fields:[
+        {key:"topic", type:"textarea", label:"Video topic", ph:"Type the video topic", rows:3, required:true},
+        {key:"drops", type:"textarea", label:"Rough retention drop-off points", ph:"e.g. 0:00-0:10 intro, drops at 2:00, 4:30, 6:00", rows:3, required:true},
+        {key:"lang", type:"select", label:"Language", options:langSel, def:"en"}
+      ],
+      sys:"You are a YouTube retention analyst. Based on the drop-off points and topic, suggest specific content changes (pacing, transitions, value density, hooks) that would improve retention at each weak moment."
+    },
+    "channel-trailer": {
+      fields:[
+        {key:"value", type:"textarea", label:"Channel value proposition", ph:"What does your channel offer viewers?", rows:3, required:true},
+        {key:"style", type:"select", label:"Style", options:[{v:"energetic",l:"Energetic"},{v:"story",l:"Story-driven"},{v:"direct",l:"Direct & clear"}], def:"energetic"},
+        {key:"lang", type:"select", label:"Language", options:langSel, def:"en"}
+      ],
+      sys:"You are a channel branding scriptwriter. Write a 45-60 second channel trailer script focused on the channel's value proposition (NOT a single video): who it's for, what to expect, and a subscribe CTA. Give 3 versions."
+    },
+    "end-screen": {
+      fields:[
+        {key:"topic", type:"text", label:"Video topic", ph:"e.g. 10 editing tips", required:true},
+        {key:"next", type:"text", label:"Next video topic (optional)", ph:"What to tease next"},
+        {key:"lang", type:"select", label:"Language", options:langSel, def:"en"}
+      ],
+      sys:"You are an outro/end-screen scriptwriter. Write the final 15-20 seconds of the video: recap the takeaway, tease the next video, and frame a subscribe CTA naturally. Give 3 variations."
+    },
+    "series-naming": {
+      fields:[
+        {key:"topic", type:"text", label:"Series topic", ph:"e.g. Learn to Edit", required:true},
+        {key:"parts", type:"number", label:"Number of episodes", def:5, min:2},
+        {key:"lang", type:"select", label:"Language", options:langSel, def:"en"}
+      ],
+      sys:"You are a series branding expert. Create a consistent series name + naming pattern and generate episode titles for all parts (e.g. 'Learn to Edit #1: Getting Started'), keeping them coherent and binge-able."
+    },
+    "brand-voice": {
+      fields:[
+        {key:"samples", type:"textarea", label:"Sample titles/descriptions", ph:"Paste a few of your best titles or descriptions", rows:4, required:true},
+        {key:"lang", type:"select", label:"Language", options:langSel, def:"en"}
+      ],
+      sys:"You are a brand voice consultant. Analyze the sample content and produce a reusable tone-of-voice guide: vocabulary, sentence style, do's/don'ts, and example rewrites, so the creator can stay consistent."
+    },
+    "faq-generator": {
+      fields:[
+        {key:"topic", type:"textarea", label:"Video topic / description", ph:"Type the topic or paste your description", rows:4, required:true},
+        {key:"lang", type:"select", label:"Language", options:langSel, def:"en"}
+      ],
+      sys:"You are a YouTube engagement strategist. Generate 8 likely viewer questions + short answers for the video, to preempt in the description (boosts watch time and comments)."
+    },
+    "chat-moderation": {
+      fields:[
+        {key:"lang", type:"select", label:"Language", options:langSel, def:"en"}
+      ],
+      sys:"You are a live-stream community moderator. Provide polite, templated responses for common live-chat situations: spam, repeated questions, off-topic, new viewers asking who you are, and appreciation. Give 3 responses per situation."
+    },
+
     // ===== ASK AI =====
     "ask-ai": {
       fields:[
