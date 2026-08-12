@@ -31,9 +31,11 @@
 
   // ---------- Tool grid ----------
   function getCat(id){ return D.categories.find(c=>c.id===id); }
+  const CAT_TINTS = { titles:"#ffd60a", script:"#f0b400", audio:"#e0a200", visual:"#ffcf2e", growth:"#ffe066", community:"#f5a623", money:"#ffdf6b", repurpose:"#e6b400", calc:"#f2c14e", production:"#fcc200", translate:"#ffd60a", ai:"#0f0f10" };
+  function catTint(id){ const c=getCat(id); return (c&&c.color)||CAT_TINTS[id]||"#ffd60a"; }
   function toolCardHTML(t){
     const fav=D.favorites.includes(t.id); const cat=getCat(t.cat);
-    return `<article class="tool-card-mini fade-in" data-id="${t.id}">
+    return `<article class="tool-card-mini" data-id="${t.id}" data-cat-color style="--cat:${catTint(t.cat)}">
       <button class="tc-fav ${fav?"active":""}" data-fav="${t.id}" aria-label="Favorite">&#10084;</button>
       <div class="tc-icon">${t.icon}</div>
       <h3>${esc(t.title)}</h3>
@@ -46,14 +48,81 @@
   }
   function toggleFav(id){ const i=D.favorites.indexOf(id); if(i>-1){D.favorites.splice(i,1);toast("Removed from favorites");} else {D.favorites.push(id);toast("Added to favorites");} }
 
+  // ---------- Recently used + usage stat + onboarding ----------
+  function logToolUse(id){
+    try{
+      let used=JSON.parse(localStorage.getItem("ych_recent")||"[]");
+      used=used.filter(x=>x!==id); used.unshift(id); used=used.slice(0,8);
+      localStorage.setItem("ych_recent",JSON.stringify(used));
+      let week=JSON.parse(localStorage.getItem("ych_week")||"[]");
+      week.push(Date.now()); week=week.filter(ts=>Date.now()-ts<7*86400000);
+      localStorage.setItem("ych_week",JSON.stringify(week));
+    }catch(e){}
+  }
+  function getRecentTools(){
+    try{ const used=JSON.parse(localStorage.getItem("ych_recent")||"[]");
+      return used.map(id=>D.tools.find(t=>t.id===id)).filter(Boolean);
+    }catch(e){ return []; }
+  }
+  function usageStat(){
+    try{ const week=JSON.parse(localStorage.getItem("ych_week")||"[]");
+      const n=week.filter(ts=>Date.now()-ts<7*86400000).length;
+      return n>0 ? String(n) : "";
+    }catch(e){ return ""; }
+  }
+  function maybeShowOnboarding(){
+    try{ if(localStorage.getItem("ych_onboard_done")) return;
+      const slides=[
+        {t:"Welcome", d:"Pick any of the 48 AI tools from the grid to get started."},
+        {t:"Ask AI", d:"Tap Ask AI in the top bar to ask any YouTube-strategy question."},
+        {t:"Favorites & History", d:"Heart your favorite tools and revisit past results anytime."}
+      ];
+      let i=0;
+      const root=document.createElement("div"); root.className="onboard";
+      const render=()=>{ root.innerHTML=`<div class="ob-head"><b>${slides[i].t}</b><button class="ob-close">✕</button></div><div class="ob-body">${slides[i].d}</div><div class="ob-dots">${slides.map((_,x)=>`<div class="ob-dot${x===i?" active":""}"></div>`).join("")}</div><div class="ob-nav">${i>0?'<button class="tb-btn" data-ob-prev>Back</button>':'<span></span>'}<button class="ob-btn" data-ob-next>${i<slides.length-1?"Next":"Done"}</button></div>`;
+        root.querySelector(".ob-close").onclick=close; root.querySelector(".ob-btn").onclick=()=>{ if(i<slides.length-1){i++;render();}else close(); };
+        const pv=root.querySelector("[data-ob-prev]"); if(pv) pv.onclick=()=>{i--;render();};
+      };
+      function close(){ root.remove(); try{localStorage.setItem("ych_onboard_done","1");}catch(e){} }
+      render(); document.body.appendChild(root);
+    }catch(e){}
+  }
+  window.addEventListener("load", ()=>{ maybeShowOnboarding(); });
+
   function renderTools(){
     const tpl=$("#tpl-tools").content.cloneNode(true); app.appendChild(tpl);
     const grid=$("#toolsGrid"), chips=$("#catChips");
-    function draw(){ const active=chips.dataset.active||"all"; grid.innerHTML=D.tools.filter(t=>active==="all"||t.cat===active).map(toolCardHTML).join(""); bindToolCards(grid); }
+    // Usage stat
+    const usage=usageStat();
+    if(usage){ const head=$(".page-head", app); head.insertAdjacentHTML("afterbegin", `<div class="usage-stat">&#9889; ${usage} used this week</div>`); }
+    // Recently used
+    const recent=getRecentTools();
+    if(recent.length){
+      const sec=document.createElement("div"); sec.className="recent-section container"; sec.style.padding="16px 0 4px";
+      sec.innerHTML=`<h2>Recently Used</h2><div class="recent-grid">${recent.map(t=>{const c=getCat(t.cat);return `<button class="recent-chip" data-rid="${t.id}"><span class="tc-icon" style="--cat:${catTint(t.cat)}">${t.icon}</span>${esc(t.title)}</button>`;}).join("")}</div>`;
+      app.insertBefore(sec, app.firstChild);
+      $$("[data-rid]",sec).forEach(b=>b.addEventListener("click",()=>navigate("#/tool?id="+b.dataset.rid)));
+    }
+    function draw(){
+      const active=chips.dataset.active||"all";
+      const list=D.tools.filter(t=>active==="all"||t.cat===active);
+      grid.innerHTML=list.map(toolCardHTML).join(""); bindToolCards(grid);
+      animateCards(grid);
+    }
     chips.innerHTML=`<button class="chip active" data-cat="all">All</button>`+D.categories.map(c=>`<button class="chip" data-cat="${c.id}">${esc(c.name)}</button>`).join("");
     chips.dataset.active="all";
     $$(".chip",chips).forEach(c=>c.addEventListener("click",()=>{ $$(".chip",chips).forEach(x=>x.classList.remove("active")); c.classList.add("active"); chips.dataset.active=c.dataset.cat; draw(); }));
     draw();
+  }
+  function animateCards(root){
+    const cards=$$(".tool-card-mini",root);
+    if(!("IntersectionObserver" in window)){
+      cards.forEach(c=>c.classList.add("in-view")); return;
+    }
+    const io=new IntersectionObserver((es)=>{
+      es.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add("in-view"), Math.min(i*60,360)); io.unobserve(e.target); } });
+    },{rootMargin:"0px 0px -40px 0px"});
+    cards.forEach(c=>io.observe(c));
   }
 
   // ---------- Dynamic field builder ----------
@@ -80,6 +149,7 @@
     const tpl=$("#tpl-tool").content.cloneNode(true); app.appendChild(tpl);
     $("#toolTitle").textContent=tool.title; $("#toolDesc").textContent=tool.bangla||""; $("#toolIcon").innerHTML=tool.icon;
     const output=$("#toolOutput"), genBtn=$("#generateBtn"), copyBtn=$("#copyBtn"), clearBtn=$(".tb-btn[data-act='clear']"), errBox=$("#errBox"), fieldsRoot=$("#toolFields");
+    logToolUse(tool.id);
 
     const specDef=window.YTHUB_SPEC.get(tool); const spec=specDef.fields||[]; const els={};
     fieldsRoot.innerHTML=spec.map(buildFieldHTML).join("");
@@ -89,27 +159,118 @@
     function setOutput(html,isRaw){ output.innerHTML=html; output.classList.toggle("has-content", !!(isRaw?output.innerText.trim():true)); }
     function showError(m){ errBox.textContent=m; errBox.hidden=false; }
     function hideError(){ errBox.hidden=true; errBox.textContent=""; }
-    function setLoading(on){ genBtn.disabled=on; const lab=$(".btn-label",genBtn), sp=$(".spinner",genBtn); if(lab) lab.textContent=on?"Generating...":"Generate"; if(sp) sp.hidden=!on; }
+    function setBtnState(st){
+      // st: idle | loading | success
+      genBtn.disabled = st==="loading";
+      genBtn.classList.toggle("loading", st==="loading");
+      const lab=$(".btn-label",genBtn);
+      const btnText = specDef.speech ? "Listen" : (tool.id==="ask-ai"?"Get Answer":"Generate");
+      if(lab){
+        if(st==="loading") lab.textContent = "Generating"+"<span class='btn-dots'>…</span>";
+        else if(st==="success") lab.textContent = "✓ Done";
+        else lab.textContent = btnText;
+      }
+      const sp=$(".spinner",genBtn); if(sp) sp.hidden = st!=="loading";
+      if(st==="success"){ genBtn.classList.add("success"); setTimeout(()=>genBtn.classList.remove("success"),900); }
+    }
+    function loadingHTML(){ return `<div class="empty-state"><div class="empty-illus"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/></svg></div><p class="muted small">Generating<span class="dots">…</span></p></div>`; }
 
-    genBtn.addEventListener("click", ()=>{
+    function runGenerate(){
       const vals=readAll(spec, els);
       for(const f of spec){ if(f.required){ const v=vals[f.key]; if(!v||(typeof v==="string"&&!v.trim())){ showError("Please fill in: "+f.label); return; } } }
       hideError();
       if(specDef.calc){ setOutput(runCalc(specDef.calc, vals)); return; }
       if(specDef.speech) return;
-      setOutput('<div class="empty-state"><div class="spinner" style="border-top-color:var(--yellow)"></div><p>Generating<span class="dots"></span></p></div>', true);
-      setLoading(true);
-      generate(tool, vals, specDef, { chunk:(t)=>setOutput(renderMarkdown(t),true), done:(t)=>{ setOutput(renderMarkdown(t),true); addHistory(tool,t); setLoading(false); }, error:(m)=>{ setLoading(false); showError(m||"Couldn't generate — try again"); } });
-    });
+      setOutput(loadingHTML(), true);
+      setBtnState("loading");
+      let done=false;
+      const cbs={
+        chunk:(t)=>{ output.classList.add("streaming"); setOutput(renderMarkdown(t)+'<span class="caret"></span>',true); },
+        done:(t)=>{ output.classList.remove("streaming"); const formatted=formatResult(tool.id, t); setOutput(formatted+outputActionsHTML(tool,t),true); addHistory(tool,t); setBtnState("success"); bindOutputActions(tool,t); },
+        error:(m)=>{ setBtnState("idle"); showError(m||"Couldn't generate — try again"); }
+      };
+      if(done) return; done=true;
+      generate(tool, vals, specDef, cbs);
+    }
 
-    copyBtn.addEventListener("click",()=>copyText(output.innerText.trim()));
-    clearBtn.addEventListener("click",()=>{ output.innerHTML='<div class="empty-state"><p>Your generated result will appear here.</p></div>'; output.classList.remove("has-content"); toast("Cleared"); });
+    genBtn.addEventListener("click", runGenerate);
+
+    copyBtn.addEventListener("click",()=>copyText(output.innerText.replace(/\s+/g," ").trim()));
+    clearBtn.addEventListener("click",()=>{ output.innerHTML='<div class="empty-state"><div class="empty-illus"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><p>Your result will appear here.</p></div>'; output.classList.remove("has-content"); toast("Cleared"); });
     $(".tb-btn[data-act='fav']").addEventListener("click",()=>{ const b=$(".tb-btn[data-act='fav']"); b.classList.toggle("active"); toggleFav(tool.id); });
     if(D.favorites.includes(tool.id)) $(".tb-btn[data-act='fav']").classList.add("active");
-    $(".tb-btn[data-act='save']").addEventListener("click",()=>{ const t=output.innerText.trim(); if(!t||t.startsWith("Your generated result")){toast("Generate something first","error");return;} D.saved.unshift({id:uid(),toolId:tool.id,title:tool.title,output:t,ts:Date.now()}); toast("Saved"); });
+    $(".tb-btn[data-act='save']").addEventListener("click",()=>{ const t=output.innerText.trim(); if(!t||t.startsWith("Your generated result")||t.startsWith("Your result")){toast("Generate something first","error");return;} D.saved.unshift({id:uid(),toolId:tool.id,title:tool.title,output:t,ts:Date.now()}); toast("Saved"); });
     $(".tb-btn[data-act='history']").addEventListener("click",()=>openHistoryModal(tool));
     $(".tb-btn[data-act='share']").addEventListener("click",()=>{ copyText(location.href); toast("Link copied — share it anywhere"); });
+
+    // Regenerate: reuses the same inputs
+    const regen = document.createElement("button");
+    regen.className="tb-btn"; regen.style.marginTop="6px"; regen.innerHTML="&#8635; Regenerate";
+    regen.addEventListener("click", runGenerate);
+    const inputCol = $(".input-col"); if(inputCol && !specDef.speech && !specDef.calc) inputCol.appendChild(regen);
   }
+
+  // ---------- Per-tool result formatting ----------
+  function formatResult(toolId, text){
+    if(!text) return renderMarkdown(text);
+    const clean = text.replace(/<[^>]+>/g,"").replace(/\s+/g," ").trim();
+    // Tag / hashtag generators -> tag chips
+    if(toolId==="tag-gen" || toolId==="hashtag-gen"){
+      const items = text.split(/[\n,]+/).map(s=>s.trim()).filter(s=>s && !/^#?\d/.test(s) && !/^tags|hashtags|generate|relevant|broad|niche|hyper/i.test(s));
+      const tags = items.slice(0,30);
+      if(tags.length) return `<div class="result-tags">${tags.map(t=>`<span class="result-tag">${esc(t.replace(/^#/,""))}</span>`).join("")}</div>`;
+    }
+    // Numbered list tools (titles, ideas, hooks, prompts)
+    if(["title-gen","ab-title","video-ideas","hook-gen","trending-finder","image-prompt","banner-concepts","merch-ideas","poll-gen","live-title","pinned-comment","comment-reply"].includes(toolId)){
+      const lines = text.split(/\n/).map(s=>s.trim()).filter(Boolean);
+      const numbered = lines.filter(l=>/^\d+[.)]/.test(l));
+      if(numbered.length>=3) return `<div class="result-list">${numbered.map(l=>{ const m=l.match(/^(\d+)[.)]\s*(.*)$/); return `<div class="r-item"><span class="r-num">${m[1]}.</span><span>${esc(m[2])}</span></div>`; }).join("")}</div>`;
+    }
+    // Chapter generator -> timestamp-aligned
+    if(toolId==="chapter-gen"){
+      const lines = text.split(/\n/).map(s=>s.trim()).filter(Boolean);
+      const ts = lines.filter(l=>/^\d{1,2}:\d{2}/.test(l));
+      if(ts.length) return `<div class="result-list">${ts.map(l=>{ const m=l.match(/^(\d{1,2}:\d{2})\s*(.*)$/); return `<div class="r-item"><span class="r-num" style="min-width:52px;font-family:ui-monospace,monospace">${m[1]}</span><span>${esc(m[2])}</span></div>`; }).join("")}</div>`;
+    }
+    // Script tools -> script block with scene breaks
+    if(["long-script","shorts-script","outline-gen","cta-gen","shot-list"].includes(toolId)){
+      const scene = text.split(/\n{2,}/).map(b=>`<div class="result-block">${esc(b.trim())}</div>`).join("");
+      if(scene) return `<div class="prose">${scene}</div>`;
+    }
+    // TTS is not AI text; skip. Calculators handled separately.
+    return renderMarkdown(text);
+  }
+
+  // ---------- Output actions (Copy / Save / Share / Use in tool) ----------
+  function outputActionsHTML(tool, text){
+    return `<div class="output-actions">
+      <button class="out-act primary" data-oa="copy">&#128203; Copy</button>
+      <button class="out-act" data-oa="save">&#128190; Save</button>
+      <button class="out-act" data-oa="share">&#8644; Share</button>
+      <button class="out-act" data-oa="use">&#128279; Use in another tool</button>
+    </div>`;
+  }
+  function bindOutputActions(tool, text){
+    $$(".output-actions [data-oa]", $("#toolOutput")).forEach(b=>{
+      b.addEventListener("click",()=>{
+        const a=b.dataset.oa;
+        if(a==="copy"){ copyText(text); b.classList.add("done"); b.textContent="✓ Copied"; setTimeout(()=>{b.classList.remove("done");b.innerHTML="&#128203; Copy";},1200); }
+        else if(a==="save"){ D.saved.unshift({id:uid(),toolId:tool.id,title:tool.title,output:text,ts:Date.now()}); toast("Saved"); b.classList.add("done"); }
+        else if(a==="share"){ copyText(text); toast("Result copied — share it anywhere"); }
+        else if(a==="use"){ openUseInTool(tool, text); }
+      });
+    });
+  }
+  function openUseInTool(fromTool, text){
+    const others=D.tools.filter(t=>t.id!==fromTool.id).slice(0,8);
+    const html=`<div class="modal-backdrop" id="useModal"><div class="modal"><div class="modal-head"><h3>Send to another tool</h3><button class="icon-btn" data-close>&times;</button></div><div class="modal-body"><p class="muted small" style="margin-bottom:10px">Choose a tool to send this output into:</p>${others.map(t=>`<button class="list-item" data-ut="${t.id}" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer"><span class="tc-icon" style="width:28px;height:28px;display:grid;place-items:center;border-radius:8px">${t.icon}</span><span>${esc(t.title)}</span></button>`).join("")}</div></div></div>`;
+    $("#modalRoot").innerHTML=html; const m=$("#useModal");
+    m.addEventListener("click",e=>{
+      if(e.target.closest("[data-close]")||e.target===m){closeModal();return;}
+      const row=e.target.closest("[data-ut]"); if(row){ navigate("#/tool?id="+row.dataset.ut); setTimeout(()=>{ const fi=$("[data-field='topic']")||$("[data-field='text']")||$("[data-field='idea']"); if(fi) fi.value=text; },150); closeModal(); }
+    });
+  }
+
   function uid(){ return "id_"+Math.random().toString(36).slice(2,10); }
   function addHistory(tool,text){ D.history.unshift({id:uid(),toolId:tool.id,title:tool.title,output:(text||"").slice(0,2000),ts:Date.now()}); if(D.history.length>200)D.history.length=200; }
 

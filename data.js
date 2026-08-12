@@ -45,6 +45,7 @@
     gear:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
     sparkle:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 9.2 8.6 2 9.3l5.5 4.7L5.8 21 12 17.3 18.2 21l-1.7-7 5.5-4.7-7.2-.7L12 2Z"/></svg>',
     file:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+    outro:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4"/><path d="M4 20h16"/><path d="m8 16 4-4 4 4"/></svg>',
     sum:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16M4 12h16M4 19h10"/></svg>',
     key:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M15 8l2 2"/></svg>',
     ratio:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>'
@@ -138,7 +139,16 @@
     { id:"subtitle-format", title:"Subtitle Formatter", cat:"translate", icon:I.cc, bangla:"SRT সাবটাইটেল ফরম্যাট" },
 
     // ASK AI (PREMIUM)
-    { id:"ask-ai", title:"Ask AI (Premium)", cat:"ai", icon:I.bot, bangla:"যেকোনো প্রশ্নের উত্তর", featured:true }
+    { id:"ask-ai", title:"Ask AI (Premium)", cat:"ai", icon:I.bot, bangla:"যেকোনো প্রশ্নের উত্তর", featured:true },
+
+    // ADVANCED STRATEGY (new)
+    { id:"retention-advisor", title:"Retention Curve Advisor", cat:"growth", icon:I.trend, bangla:"রিটেনশন ড্রপ বিশ্লেষণ" },
+    { id:"channel-trailer", title:"Channel Trailer Script", cat:"script", icon:I.camera, bangla:"নতুন দর্শকের জন্য ট্রেইলার" },
+    { id:"end-screen", title:"End Screen / Outro Script", cat:"script", icon:I.outro, bangla:"ভিডিওর শেষ ১৫-২০ সেকেন্ড" },
+    { id:"series-naming", title:"Series Naming Generator", cat:"titles", icon:I.structure, bangla:"সিরিজের পর্বের নাম" },
+    { id:"brand-voice", title:"Brand Voice Guide", cat:"community", icon:I.sparkle, bangla:"টোন-অফ-ভয়েস গাইড" },
+    { id:"faq-generator", title:"Q&A / FAQ Generator", cat:"community", icon:I.community, bangla:"ভিডিওর FAQ" },
+    { id:"chat-moderation", title:"Live Chat Moderation Templates", cat:"community", icon:I.chat, bangla:"লাইভ চ্যাট রেসপন্স" }
   ];
 
   window.YTHUB_DATA = {
