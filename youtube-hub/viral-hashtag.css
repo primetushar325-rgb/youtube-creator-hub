@@ -1,0 +1,139 @@
+/* ============================================================
+   Viral Hashtag Intelligence — premium black + gold module
+   Self-contained, does not affect the rest of the site.
+   ============================================================ */
+:root{
+  --vh-gold:#ffd60a;
+  --vh-gold-2:#e6b800;
+  --vh-gold-soft:rgba(255,214,10,.12);
+  --vh-glass:rgba(18,18,20,.72);
+  --vh-glass-2:rgba(24,24,28,.85);
+  --vh-line:rgba(255,214,10,.18);
+  --vh-bg:#0b0b0d;
+  --vh-text:#f5f3ea;
+  --vh-muted:#a8a49a;
+  --vh-green:#3ddc84;
+  --vh-red:#ff4d4f;
+  --vh-blue:#58a6ff;
+}
+
+/* ---------- Floating "#" icon ---------- */
+.vh-fab{
+  position:fixed;z-index:9999;width:58px;height:58px;border-radius:18px;cursor:grab;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#1a1a1e 0%,#0d0d10 60%);
+  border:1px solid var(--vh-gold);color:var(--vh-gold);
+  box-shadow:0 0 22px rgba(255,214,10,.35),inset 0 0 14px rgba(255,214,10,.12);
+  animation:vhFloat 3.5s ease-in-out infinite;
+  user-select:none;-webkit-user-select:none;touch-action:none;
+  transition:transform .12s ease;
+}
+.vh-fab:hover{box-shadow:0 0 34px rgba(255,214,10,.55)}
+.vh-fab.dragging{cursor:grabbing;transform:scale(1.06);animation:none}
+.vh-fab svg{width:28px;height:28px}
+@keyframes vhFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.vh-fab.dragging{transform:translateY(0)!important}
+
+/* ---------- Dashboard overlay ---------- */
+.vh-overlay{
+  position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);
+  display:none;align-items:flex-end;justify-content:center;
+}
+.vh-overlay.open{display:flex;animation:vhFade .25s ease both}
+@keyframes vhFade{from{opacity:0}to{opacity:1}}
+.vh-dash{
+  width:100%;max-width:760px;height:92vh;background:var(--vh-glass-2);
+  border:1px solid var(--vh-line);border-radius:22px 22px 0 0;overflow:hidden;
+  display:flex;flex-direction:column;color:var(--vh-text);
+  box-shadow:0 -10px 60px rgba(0,0,0,.6);
+  animation:vhUp .3s cubic-bezier(.2,.8,.3,1) both;
+}
+@keyframes vhUp{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@media(min-width:760px){.vh-overlay{align-items:center}.vh-dash{height:86vh;border-radius:22px;animation:vhPop .25s ease both}}
+@keyframes vhPop{from{transform:scale(.96);opacity:0}to{transform:none;opacity:1}}
+
+/* ---------- Dashboard header ---------- */
+.vh-head{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--vh-line);background:linear-gradient(180deg,rgba(255,214,10,.06),transparent)}
+.vh-head h2{font-size:18px;font-weight:800;margin:0;letter-spacing:-.3px}
+.vh-head .vh-sub{font-size:12px;color:var(--vh-muted)}
+.vh-close{margin-left:auto;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--vh-muted);font-size:20px;background:rgba(255,255,255,.04);border:1px solid var(--vh-line)}
+.vh-close:hover{color:#fff}
+
+/* ---------- Tabs ---------- */
+.vh-tabs{display:flex;gap:6px;padding:12px 18px;overflow-x:auto;border-bottom:1px solid var(--vh-line);scrollbar-width:thin}
+.vh-tabs button{white-space:nowrap;padding:8px 14px;border-radius:999px;border:1px solid var(--vh-line);background:transparent;color:var(--vh-muted);font-size:13px;font-weight:600;transition:.2s}
+.vh-tabs button.active{background:var(--vh-gold);color:#0b0b0d;border-color:var(--vh-gold)}
+.vh-tabs button:hover{color:var(--vh-gold)}
+
+/* ---------- Body / cards ---------- */
+.vh-body{flex:1;overflow-y:auto;padding:16px 18px;scroll-behavior:smooth}
+.vh-body::-webkit-scrollbar{width:6px}
+.vh-body::-webkit-scrollbar-thumb{background:var(--vh-line);border-radius:99px}
+.vh-glass-card{background:var(--vh-glass);border:1px solid var(--vh-line);border-radius:16px;padding:16px;margin-bottom:14px;backdrop-filter:blur(10px)}
+.vh-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.vh-card-head h3{font-size:15px;font-weight:700;margin:0}
+.vh-card-head .vh-tag{font-size:11px;font-weight:700;color:#0b0b0d;background:var(--vh-gold);padding:3px 10px;border-radius:999px}
+
+/* ---------- Stat grid ---------- */
+.vh-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+@media(min-width:560px){.vh-stats{grid-template-columns:repeat(4,1fr)}}
+.vh-stat{background:var(--vh-glass);border:1px solid var(--vh-line);border-radius:14px;padding:12px}
+.vh-stat .vhs-num{font-size:22px;font-weight:800;color:var(--vh-gold)}
+.vh-stat .vhs-lab{font-size:11px;color:var(--vh-muted);margin-top:2px}
+
+/* ---------- Hashtag rows ---------- */
+.vh-row{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;border:1px solid var(--vh-line);background:rgba(255,255,255,.02);margin-bottom:8px;cursor:pointer;transition:.15s}
+.vh-row:hover{border-color:var(--vh-gold);background:var(--vh-gold-soft)}
+.vh-row .vh-hash{font-size:16px;font-weight:800;color:var(--vh-gold);min-width:90px}
+.vh-row .vh-row-body{flex:1;min-width:0}
+.vh-row .vh-row-t{font-size:12px;color:var(--vh-muted);display:flex;gap:10px;flex-wrap:wrap}
+.vh-row .vh-score{font-size:15px;font-weight:800;text-align:right}
+.vh-score.hot{color:var(--vh-green)}
+.vh-score.warm{color:var(--vh-gold)}
+.vh-score.cold{color:var(--vh-muted)}
+.vh-bar{height:5px;background:rgba(255,255,255,.06);border-radius:99px;margin-top:6px;overflow:hidden}
+.vh-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--vh-gold-2),var(--vh-gold));border-radius:99px}
+
+/* ---------- Filter bar ---------- */
+.vh-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.vh-filter input{flex:1;min-width:140px;background:rgba(255,255,255,.04);border:1px solid var(--vh-line);color:var(--vh-text);padding:10px 14px;border-radius:10px;font-size:14px;outline:none}
+.vh-filter input:focus{border-color:var(--vh-gold)}
+.vh-filter select{background:rgba(255,255,255,.04);border:1px solid var(--vh-line);color:var(--vh-text);padding:10px;border-radius:10px;font-size:13px}
+
+/* ---------- Buttons ---------- */
+.vh-btn{background:var(--vh-gold);color:#0b0b0d;border:0;padding:10px 18px;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;transition:.15s}
+.vh-btn:hover{filter:brightness(1.08)}
+.vh-btn.ghost{background:transparent;border:1px solid var(--vh-line);color:var(--vh-muted)}
+.vh-btn.ghost:hover{color:var(--vh-gold);border-color:var(--vh-gold)}
+.vh-btn.watch{background:var(--vh-gold-soft);border:1px solid var(--vh-line);color:var(--vh-gold)}
+.vh-btn.watch.active{background:var(--vh-gold);color:#0b0b0d}
+
+/* ---------- Add channel ---------- */
+.vh-add{display:flex;gap:8px;margin-bottom:14px}
+.vh-add input{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--vh-line);color:var(--vh-text);padding:10px 14px;border-radius:10px;font-size:14px;outline:none}
+.vh-add input:focus{border-color:var(--vh-gold)}
+
+/* ---------- Notification pill ---------- */
+.vh-notif{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:10001;background:var(--vh-glass-2);border:1px solid var(--vh-gold);color:var(--vh-text);padding:12px 20px;border-radius:14px;font-size:13px;box-shadow:0 8px 30px rgba(0,0,0,.5);display:none;animation:vhNotif .3s ease both;max-width:90vw}
+.vh-notif.show{display:block}
+.vh-notif b{color:var(--vh-gold)}
+@keyframes vhNotif{from{opacity:0;transform:translateX(-50%) translateY(-12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+/* ---------- Empty / loading ---------- */
+.vh-empty{text-align:center;color:var(--vh-muted);padding:30px 10px;font-size:14px}
+.vh-loading{text-align:center;color:var(--vh-gold);padding:30px;font-size:14px}
+.vh-spin{width:26px;height:26px;border:3px solid rgba(255,214,10,.2);border-top-color:var(--vh-gold);border-radius:50%;display:inline-block;animation:vhSpin .8s linear infinite}
+@keyframes vhSpin{to{transform:rotate(360deg)}}
+
+/* ---------- Score gauge ---------- */
+.vh-gauge{width:150px;height:150px;margin:0 auto 12px;position:relative}
+.vh-gauge svg{width:100%;height:100%;transform:rotate(-90deg)}
+.vh-gauge .vh-g-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.vh-gauge .vh-g-num b{font-size:34px;font-weight:900;color:var(--vh-gold)}
+.vh-gauge .vh-g-num span{font-size:11px;color:var(--vh-muted)}
+
+/* ---------- Watchlist ---------- */
+.vh-wl{display:flex;flex-wrap:wrap;gap:8px}
+.vh-wl-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;border:1px solid var(--vh-line);background:var(--vh-gold-soft);color:var(--vh-gold);font-size:13px;font-weight:600}
+.vh-wl-chip button{background:none;border:0;color:var(--vh-muted);font-size:14px;cursor:pointer;padding:0 2px}
+.vh-wl-chip button:hover{color:var(--vh-red)}
