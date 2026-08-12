@@ -1,0 +1,9 @@
+{
+  "name": "youtube-creator-hub",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "db:migrate": "node scripts/migrate.js",
+    "db:setup-admin": "node scripts/setup-admin.js"
+  }
+}
