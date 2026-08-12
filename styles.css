@@ -139,3 +139,134 @@ input,textarea,select{font-family:inherit;color:inherit}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
 :focus-visible{outline:3px solid rgba(255,214,10,.5);outline-offset:2px;border-radius:8px}
+
+/* ============================================================
+   PREMIUM POLISH LAYER
+   ============================================================ */
+
+/* --- Design tokens (consistent spacing/radius/shadow) --- */
+:root{
+  --radius-sm:10px;
+  --radius:14px;
+  --radius-lg:18px;
+  --space-xs:6px;
+  --space-sm:10px;
+  --space-md:16px;
+  --space-lg:22px;
+  --shadow-hover:0 12px 32px -10px rgba(255,214,10,.35);
+  --glow-yellow:0 0 0 3px rgba(255,214,10,.18);
+  --accent-soft:rgba(255,214,10,.10);
+}
+
+/* --- Staggered card entrance (viewport scroll) --- */
+.tool-card-mini{opacity:0;transform:translateY(14px);transition:opacity .45s cubic-bezier(.2,.7,.3,1),transform .45s cubic-bezier(.2,.7,.3,1),box-shadow .25s,border-color .25s}
+.tool-card-mini.in-view{opacity:1;transform:none}
+.tool-card-mini:hover,.tool-card-mini:focus-visible{
+  border-color:rgba(255,214,10,.45);
+  box-shadow:var(--shadow-hover),var(--glow-yellow);
+  transform:translateY(-3px);
+}
+.tool-card-mini:active{transform:scale(.985) translateY(-1px)}
+.tool-card-mini .tc-icon{transition:transform .2s ease,background .2s}
+.tool-card-mini:hover .tc-icon{transform:scale(1.06) rotate(-3deg)}
+
+/* --- Category chip slide-in fill --- */
+.chips{scrollbar-width:thin;scroll-snap-type:x proximity}
+.chips::-webkit-scrollbar{height:6px}
+.chips::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:99px}
+.chip{position:relative;overflow:hidden;transition:color .25s,transform .15s,border-color .25s}
+.chip::after{content:"";position:absolute;inset:0;background:var(--yellow);transform:translateX(-101%);transition:transform .28s ease}
+.chip.active{color:#111;border-color:var(--yellow)}
+.chip.active::after{transform:translateX(0)}
+.chip span,.chip{position:relative;z-index:1}
+
+/* --- Premium Generate button state system --- */
+.btn-primary{
+  background:linear-gradient(135deg,#ffe066 0%,var(--yellow) 55%,var(--yellow-deep) 100%);
+  color:#111;border-color:transparent;box-shadow:0 4px 14px -4px rgba(255,214,10,.6);
+  position:relative;overflow:hidden;
+}
+.btn-primary:hover{box-shadow:0 8px 22px -6px rgba(255,214,10,.75)}
+.btn-primary:active{transform:scale(.97);box-shadow:0 2px 8px -2px rgba(255,214,10,.5)}
+.btn-primary:disabled{opacity:.8;transform:scale(1)}
+/* shimmer sweep while loading */
+.btn-primary.loading::before{content:"";position:absolute;top:0;left:-60%;width:50%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);
+  animation:shimmer 1.1s infinite}
+@keyframes shimmer{to{left:110%}}
+/* pulsing dots inside loading label */
+.btn-primary.loading .btn-dots::after{content:"";animation:dots 1.2s steps(4,end) infinite}
+@keyframes dots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
+/* success flash (green check) */
+.btn-primary.success::after{content:"✓";position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#0f0f10;font-weight:900;animation:pop .3s ease}
+@keyframes pop{0%{transform:translateY(-50%) scale(0)}70%{transform:translateY(-50%) scale(1.25)}100%{transform:translateY(-50%) scale(1)}}
+
+/* --- Streaming / typing result reveal --- */
+.output.streaming .prose{animation:streamIn .25s ease both}
+@keyframes streamIn{from{opacity:0;filter:blur(2px)}to{opacity:1;filter:blur(0)}}
+.output .caret{display:inline-block;width:2px;height:1em;background:var(--yellow);vertical-align:text-bottom;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* --- Per-category accent tint on tool card icon --- */
+.tool-card-mini .tc-icon{background:var(--accent-soft,#f5f5f5);color:var(--fg)}
+.tool-card-mini[data-cat-color] .tc-icon{background:color-mix(in srgb, var(--cat,#ffd60a) 16%, transparent);color:var(--cat,#ffd60a)}
+
+/* --- Result format helpers --- */
+.result-list{display:flex;flex-direction:column;gap:8px}
+.result-list .r-item{display:flex;gap:10px;align-items:baseline}
+.result-list .r-num{font-weight:800;color:var(--yellow-deep);min-width:26px}
+.result-block{background:var(--bg-soft);border:1px solid var(--line);border-radius:var(--radius);padding:14px;white-space:pre-wrap;font-family:inherit}
+.result-tags{display:flex;flex-wrap:wrap;gap:8px}
+.result-tag{background:var(--bg-soft);border:1px solid var(--line);padding:6px 12px;border-radius:999px;font-size:13px}
+.result-single{background:var(--bg-soft);border:1px dashed var(--line-strong);padding:12px 14px;border-radius:var(--radius);font-family:ui-monospace,monospace;word-break:break-word}
+
+/* --- Output action buttons --- */
+.output-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.out-act{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;border:1px solid var(--line);font-weight:600;font-size:13px;color:var(--muted);transition:.15s;min-height:38px}
+.out-act:hover{color:var(--fg);border-color:var(--line-strong);background:var(--bg-soft)}
+.out-act.primary{background:var(--yellow);color:#111;border-color:transparent}
+.out-act.primary:hover{background:var(--yellow-deep)}
+.out-act.done{background:var(--ok);color:#fff;border-color:transparent}
+
+/* --- Recently used --- */
+.recent-section{margin-bottom:8px}
+.recent-section h2{font-size:16px;font-weight:800;margin-bottom:10px}
+.recent-grid{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
+.recent-chip{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--bg);font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer;transition:.15s;min-height:38px}
+.recent-chip:hover{border-color:var(--yellow);color:var(--yellow-deep)}
+.recent-chip .tc-icon{width:22px;height:22px;border-radius:6px;display:grid;place-items:center}
+
+/* --- Usage stat --- */
+.usage-stat{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:var(--accent-soft);font-size:13px;font-weight:700;color:var(--fg);margin-bottom:6px}
+
+/* --- Onboarding tooltip --- */
+.onboard{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);width:min(92vw,420px);background:var(--black);color:#fff;border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow-lg);z-index:200;animation:onboardIn .35s ease both}
+@keyframes onboardIn{from{opacity:0;transform:translateX(-50%) translateY(16px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.onboard .ob-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.onboard .ob-head b{font-size:15px}
+.onboard .ob-close{color:#fff;opacity:.7;font-size:18px;padding:4px 8px}
+.onboard .ob-dots{display:flex;gap:6px;justify-content:center;margin-top:12px}
+.onboard .ob-dot{width:8px;height:8px;border-radius:99px;background:rgba(255,255,255,.25);transition:.2s}
+.onboard .ob-dot.active{background:var(--yellow);width:20px}
+.onboard .ob-nav{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.onboard .ob-btn{background:var(--yellow);color:#111;font-weight:700;padding:8px 16px;border-radius:10px;font-size:14px}
+
+/* --- Empty/loading illustration --- */
+.empty-illus{width:56px;height:56px;margin:0 auto 10px;border-radius:16px;background:var(--accent-soft);display:grid;place-items:center;color:var(--yellow-deep);animation:illusFloat 3s ease-in-out infinite}
+@keyframes illusFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* --- Touch target sizing (mobile) --- */
+.tb-btn,.out-act,.chip,.icon-btn,.recent-chip{min-height:44px}
+
+/* --- Dark theme contrast fixes (WCAG AA) --- */
+@media (prefers-color-scheme: dark){
+  :root{--muted:#b0b0ba;--line:#33333a;--bg-soft:#1a1a1d}
+  .muted{color:#b0b0ba}
+  .result-tag,.result-block,.result-single{background:#1a1a1d;border-color:#33333a}
+}
+
+/* --- Reduced motion --- */
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .tool-card-mini{opacity:1;transform:none}
+}
