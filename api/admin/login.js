@@ -14,28 +14,40 @@ function hashPassword(pw) {
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
-  if (!isDbConfigured()) return res.status(503).json({ error: "Database not configured" });
-
-  const body = typeof req.body === "string" ? JSON.parse(req.body) : (req.body || {});
-  const { username, password } = body;
-  if (!username || !password) return res.status(400).json({ error: "Username and password required" });
-
-  const admin = await getAdminByUsername(username);
-  if (!admin) return res.status(401).json({ error: "Invalid credentials" });
-
-  // Verify password against stored SHA-256 hash
-  const entered = hashPassword(password);
-  if (entered !== admin.password_hash) {
-    return res.status(401).json({ error: "Invalid credentials" });
+  if (!isDbConfigured()) {
+    return res.status(503).json({
+      error:
+        "Database not configured. Set CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_D1_DATABASE_ID, CLOUDFLARE_D1_API_TOKEN in Vercel env vars.",
+    });
   }
 
-  const secret = process.env.ADMIN_SECRET || "dev-secret-change-me";
-  const raw = `${username}:${Date.now()}:${secret}`;
-  const token = Buffer.from(raw).toString("base64");
+  try {
+    const body = typeof req.body === "string" ? JSON.parse(req.body) : (req.body || {});
+    const { username, password } = body;
+    if (!username || !password) return res.status(400).json({ error: "Username and password required" });
 
-  res.setHeader(
-    "Set-Cookie",
-    `${SESSION_COOKIE}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${COOKIE_MAX_AGE}`
-  );
-  res.status(200).json({ ok: true, username: admin.username });
+    const admin = await getAdminByUsername(username);
+    if (!admin) return res.status(401).json({ error: "Invalid credentials" });
+
+    // Verify password against stored SHA-256 hash
+    const entered = hashPassword(password);
+    if (entered !== admin.password_hash) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    const secret = process.env.ADMIN_SECRET || "dev-secret-change-me";
+    const raw = `${username}:${Date.now()}:${secret}`;
+    const token = Buffer.from(raw).toString("base64");
+
+    res.setHeader(
+      "Set-Cookie",
+      `${SESSION_COOKIE}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${COOKIE_MAX_AGE}`
+    );
+    res.status(200).json({ ok: true, username: admin.username });
+  } catch (e) {
+    res.status(500).json({
+      error: "Database error: " + (e.message || String(e)),
+      hint: "Check your Cloudflare D1 credentials and that the database exists.",
+    });
+  }
 }
