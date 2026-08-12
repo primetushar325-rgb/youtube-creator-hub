@@ -1,4 +1,5 @@
 // POST /api/admin/login — verify admin credentials, set a simple session cookie
+import { createHash } from "node:crypto";
 import { isDbConfigured } from "../../lib/db.js";
 import { getAdminByUsername } from "../../lib/repo.js";
 
@@ -6,6 +7,10 @@ export const config = { runtime: "nodejs" };
 
 const SESSION_COOKIE = "ych_admin";
 const COOKIE_MAX_AGE = 60 * 60 * 12; // 12h
+
+function hashPassword(pw) {
+  return createHash("sha256").update(pw).digest("hex");
+}
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
@@ -18,8 +23,12 @@ export default async function handler(req, res) {
   const admin = await getAdminByUsername(username);
   if (!admin) return res.status(401).json({ error: "Invalid credentials" });
 
-  // Simple token = base64 of username + timestamp, signed by a secret.
-  // For production, use bcrypt hashing + a real JWT (see note in README).
+  // Verify password against stored SHA-256 hash
+  const entered = hashPassword(password);
+  if (entered !== admin.password_hash) {
+    return res.status(401).json({ error: "Invalid credentials" });
+  }
+
   const secret = process.env.ADMIN_SECRET || "dev-secret-change-me";
   const raw = `${username}:${Date.now()}:${secret}`;
   const token = Buffer.from(raw).toString("base64");
