@@ -186,7 +186,7 @@
       let done=false;
       const cbs={
         chunk:(t)=>{ output.classList.add("streaming"); setOutput(renderMarkdown(t)+'<span class="caret"></span>',true); },
-        done:(t)=>{ output.classList.remove("streaming"); setOutput(renderMarkdown(t)+outputActionsHTML(tool,t),true); addHistory(tool,t); setBtnState("success"); bindOutputActions(tool,t); },
+        done:(t)=>{ output.classList.remove("streaming"); const formatted=formatResult(tool.id, t); setOutput(formatted+outputActionsHTML(tool,t),true); addHistory(tool,t); setBtnState("success"); bindOutputActions(tool,t); },
         error:(m)=>{ setBtnState("idle"); showError(m||"Couldn't generate — try again"); }
       };
       if(done) return; done=true;
@@ -208,6 +208,37 @@
     regen.className="tb-btn"; regen.style.marginTop="6px"; regen.innerHTML="&#8635; Regenerate";
     regen.addEventListener("click", runGenerate);
     const inputCol = $(".input-col"); if(inputCol && !specDef.speech && !specDef.calc) inputCol.appendChild(regen);
+  }
+
+  // ---------- Per-tool result formatting ----------
+  function formatResult(toolId, text){
+    if(!text) return renderMarkdown(text);
+    const clean = text.replace(/<[^>]+>/g,"").replace(/\s+/g," ").trim();
+    // Tag / hashtag generators -> tag chips
+    if(toolId==="tag-gen" || toolId==="hashtag-gen"){
+      const items = text.split(/[\n,]+/).map(s=>s.trim()).filter(s=>s && !/^#?\d/.test(s) && !/^tags|hashtags|generate|relevant|broad|niche|hyper/i.test(s));
+      const tags = items.slice(0,30);
+      if(tags.length) return `<div class="result-tags">${tags.map(t=>`<span class="result-tag">${esc(t.replace(/^#/,""))}</span>`).join("")}</div>`;
+    }
+    // Numbered list tools (titles, ideas, hooks, prompts)
+    if(["title-gen","ab-title","video-ideas","hook-gen","trending-finder","image-prompt","banner-concepts","merch-ideas","poll-gen","live-title","pinned-comment","comment-reply"].includes(toolId)){
+      const lines = text.split(/\n/).map(s=>s.trim()).filter(Boolean);
+      const numbered = lines.filter(l=>/^\d+[.)]/.test(l));
+      if(numbered.length>=3) return `<div class="result-list">${numbered.map(l=>{ const m=l.match(/^(\d+)[.)]\s*(.*)$/); return `<div class="r-item"><span class="r-num">${m[1]}.</span><span>${esc(m[2])}</span></div>`; }).join("")}</div>`;
+    }
+    // Chapter generator -> timestamp-aligned
+    if(toolId==="chapter-gen"){
+      const lines = text.split(/\n/).map(s=>s.trim()).filter(Boolean);
+      const ts = lines.filter(l=>/^\d{1,2}:\d{2}/.test(l));
+      if(ts.length) return `<div class="result-list">${ts.map(l=>{ const m=l.match(/^(\d{1,2}:\d{2})\s*(.*)$/); return `<div class="r-item"><span class="r-num" style="min-width:52px;font-family:ui-monospace,monospace">${m[1]}</span><span>${esc(m[2])}</span></div>`; }).join("")}</div>`;
+    }
+    // Script tools -> script block with scene breaks
+    if(["long-script","shorts-script","outline-gen","cta-gen","shot-list"].includes(toolId)){
+      const scene = text.split(/\n{2,}/).map(b=>`<div class="result-block">${esc(b.trim())}</div>`).join("");
+      if(scene) return `<div class="prose">${scene}</div>`;
+    }
+    // TTS is not AI text; skip. Calculators handled separately.
+    return renderMarkdown(text);
   }
 
   // ---------- Output actions (Copy / Save / Share / Use in tool) ----------
