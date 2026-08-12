@@ -11,6 +11,17 @@
 
   $("#year").textContent = new Date().getFullYear();
 
+  // ---------- Analytics tracking (fire-and-forget) ----------
+  function getVisitorId(){
+    try{ let id=localStorage.getItem("ych_visitor_id"); if(!id){ id="v_"+Math.random().toString(36).slice(2)+Date.now().toString(36); localStorage.setItem("ych_visitor_id",id);} return id; }catch(e){ return ""; }
+  }
+  function trackVisit(){
+    try{ fetch("/api/track/visit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({visitorId:getVisitorId(),pagePath:location.pathname+location.hash,referrer:document.referrer||""}),keepalive:true}).catch(()=>{}); }catch(e){}
+  }
+  function trackToolUse(toolId, toolTitle, action){
+    try{ fetch("/api/track/use",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({toolId,toolTitle,visitorId:getVisitorId(),action}),keepalive:true}).catch(()=>{}); }catch(e){}
+  }
+
   // ---------- Utilities ----------
   function esc(s){ return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
   function toast(msg, type){ const el=$("#toast"); el.textContent=msg; el.className="toast "+(type||"success"); el.hidden=false; clearTimeout(toast._t); toast._t=setTimeout(()=>{el.hidden=true;},2200); }
@@ -25,7 +36,7 @@
   }
   function navigate(hash){ location.hash=hash; }
   window.addEventListener("hashchange", render);
-  function render(){ window.scrollTo({top:0}); app.innerHTML=""; closeModal(); const r=parseRoute(); (routes[r.path]||renderTools)(r); }
+  function render(){ window.scrollTo({top:0}); app.innerHTML=""; closeModal(); const r=parseRoute(); (routes[r.path]||renderTools)(r); trackVisit(); }
   const askBtn=$("#askBtn"); if(askBtn) askBtn.addEventListener("click",()=>navigate("#/ask-ai"));
   const favBtn=$("#favBtn"); if(favBtn) favBtn.addEventListener("click",()=>navigate("#/favorites"));
 
@@ -150,6 +161,7 @@
     $("#toolTitle").textContent=tool.title; $("#toolDesc").textContent=tool.bangla||""; $("#toolIcon").innerHTML=tool.icon;
     const output=$("#toolOutput"), genBtn=$("#generateBtn"), copyBtn=$("#copyBtn"), clearBtn=$(".tb-btn[data-act='clear']"), errBox=$("#errBox"), fieldsRoot=$("#toolFields");
     logToolUse(tool.id);
+    trackToolUse(tool.id, tool.title, "open");
 
     const specDef=window.YTHUB_SPEC.get(tool); const spec=specDef.fields||[]; const els={};
     fieldsRoot.innerHTML=spec.map(buildFieldHTML).join("");
@@ -181,6 +193,7 @@
       hideError();
       if(specDef.calc){ setOutput(runCalc(specDef.calc, vals)); return; }
       if(specDef.speech) return;
+      trackToolUse(tool.id, tool.title, "generate");
       setOutput(loadingHTML(), true);
       setBtnState("loading");
       let done=false;

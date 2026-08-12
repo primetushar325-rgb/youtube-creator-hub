@@ -104,7 +104,7 @@
     document.body.appendChild(fab);
     makeDraggable(fab);
     fab.addEventListener("click",(e)=>{
-      if(fab._dragged) { fab._dragged=false; return; }
+      if(fab._dragged){ fab._dragged=false; return; }
       openDashboard();
     });
     // re-check position on resize (keep on screen)
@@ -117,8 +117,7 @@
       sx=pt.clientX; sy=pt.clientY; ox=fab.offsetLeft; oy=fab.offsetTop;
       started=false; fab.classList.add("dragging");
       document.addEventListener("mousemove",move); document.addEventListener("mouseup",end);
-      document.addEventListener("touchmove",move,{passive:false}); document.addEventListener("touchend",end);
-      e.preventDefault();
+      document.addEventListener("touchmove",move,{passive:true}); document.addEventListener("touchend",end);
     };
     const move=(e)=>{
       const pt=(e.touches?e.touches[0]:e);
@@ -127,15 +126,17 @@
       if(!started) return;
       fab._dragged=true;
       fab.style.left=(ox+dx)+"px"; fab.style.top=(oy+dy)+"px"; fab.style.bottom="auto";
+      // Prevent the page from scrolling while dragging
+      if(e.cancelable) e.preventDefault();
     };
     const end=()=>{
       fab.classList.remove("dragging");
       document.removeEventListener("mousemove",move); document.removeEventListener("mouseup",end);
       document.removeEventListener("touchmove",move); document.removeEventListener("touchend",end);
-      if(fab._dragged){ lsSet(LS.pos,{x:fab.offsetLeft,y:fab.offsetTop}); setTimeout(()=>{fab._dragged=false;},50); }
+      if(fab._dragged){ lsSet(LS.pos,{x:fab.offsetLeft,y:fab.offsetTop}); }
     };
     fab.addEventListener("mousedown",start);
-    fab.addEventListener("touchstart",start,{passive:false});
+    fab.addEventListener("touchstart",start,{passive:true});
   }
 
   // ---------- Dashboard ----------

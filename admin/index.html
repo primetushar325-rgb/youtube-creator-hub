@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Creator Hub — Admin</title>
+<meta name="theme-color" content="#0f0f10" />
+<link rel="stylesheet" href="./admin.css" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="adminApp">
+  <!-- Login screen -->
+  <div id="loginView" class="login" style="display:none">
+    <div class="login-card">
+      <h1>Creator Hub Admin</h1>
+      <p class="muted">Sign in to view analytics &amp; manage the hub.</p>
+      <input id="loginUser" placeholder="Username" autocomplete="username" />
+      <input id="loginPass" type="password" placeholder="Password" autocomplete="current-password" />
+      <button id="loginBtn" class="btn">Sign In</button>
+      <div id="loginErr" class="err" hidden></div>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashView" style="display:none">
+    <header class="topbar">
+      <div class="brand">Creator Hub <span>Admin</span></div>
+      <button id="logoutBtn" class="btn ghost">Logout</button>
+    </header>
+
+    <main class="wrap">
+      <div class="grid stats" id="statCards"></div>
+
+      <div class="two-col">
+        <section class="card">
+          <h2>Most Used Tools</h2>
+          <div id="topTools"></div>
+        </section>
+        <section class="card">
+          <h2>Visits (last 14 days)</h2>
+          <div id="recentDays"></div>
+        </section>
+      </div>
+
+      <section class="card">
+        <h2>Tracked Channels</h2>
+        <div class="add-row">
+          <input id="chanInput" placeholder="Add channel name…">
+          <button id="chanAdd" class="btn">Add</button>
+        </div>
+        <div id="chanList"></div>
+      </section>
+
+      <section class="card">
+        <h2>Saved Trends / Watchlist</h2>
+        <div id="trendList"></div>
+      </section>
+    </main>
+  </div>
+</div>
+<script src="./admin.js"></script>
+</body>
+</html>
