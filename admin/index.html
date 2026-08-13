@@ -56,6 +56,39 @@
         <h2>Saved Trends / Watchlist</h2>
         <div id="trendList"></div>
       </section>
+
+      <section class="card">
+        <h2>🔔 Notification Center</h2>
+        <div class="notif-composer">
+          <input id="notifTitle" placeholder="Notification title" />
+          <textarea id="notifMsg" placeholder="Notification message" rows="2"></textarea>
+          <div class="notif-row">
+            <input id="notifUrl" placeholder="URL (e.g. /#/tools)" value="/" />
+            <select id="notifTarget">
+              <option value="all">All Users</option>
+              <option value="installed">Installed App Users</option>
+              <option value="subscribed">Subscribed to notifications</option>
+            </select>
+          </div>
+          <div class="notif-row">
+            <input id="notifIcon" placeholder="Icon URL (optional)" />
+            <input id="notifImage" placeholder="Image URL (optional)" />
+          </div>
+          <div class="notif-row">
+            <input type="datetime-local" id="notifSchedule" />
+            <button class="btn" id="notifSend">Send Notification</button>
+            <button class="btn ghost" id="notifNow">Send Now</button>
+          </div>
+          <div id="notifResult" class="err" hidden></div>
+        </div>
+        <h3 style="margin:18px 0 8px">History</h3>
+        <div id="notifHistory"></div>
+      </section>
+
+      <section class="card">
+        <h2>🔔 Notification Settings</h2>
+        <div id="notifSettings"></div>
+      </section>
     </main>
   </div>
 </div>

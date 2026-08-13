@@ -64,3 +64,76 @@ The hub has a built-in **admin panel** at `/admin` that shows:
 4. Copy the **Database ID** → that's `CLOUDFLARE_D1_DATABASE_ID`.
 5. Your **Account ID** is on the dashboard overview page → `CLOUDFLARE_ACCOUNT_ID`.
 6. Create an API token: https://dash.cloudflare.com/profile/api-tokens → **Create Token** → use the **"Edit Cloudflare Workers"** template → that gives D1 access → copy it → `CLOUDFLARE_D1_API_TOKEN`.
+
+## PWA + Push Notifications
+
+The site is a full **installable PWA** with **Web Push notifications**.
+
+### Features
+- **Install banner** (top) → native PWA install prompt. Dismissible per session; reappears next session until installed; fully hidden once installed.
+- **App install** → standalone mode (no address bar), works offline via the service worker.
+- **Notification permission prompt** (non-aggressive, delayed) with Allow / Not Now.
+- **Admin Notification Center** at `/admin` → compose, send now or schedule, history, and global settings (New Videos / Tools / Templates / Updates / Announcements, sound).
+- **User notification settings** via the 🔔 bell → per-category on/off.
+- **Web Push** via VAPID keys (no Firebase needed — fits the static + serverless architecture).
+
+### Setup (env vars in Vercel)
+```
+# Generate once:
+#   npx web-push generate-vapid-keys
+VAPID_PUBLIC_KEY=...
+VAPID_PRIVATE_KEY=...
+VAPID_SUBJECT=mailto:admin@yourdomain.com
+```
+
+### Migrate the new tables
+Run these in Cloudflare D1 console (or `npm run db:migrate` after adding to schema.sql):
+```sql
+CREATE TABLE IF NOT EXISTS push_subs (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  endpoint TEXT NOT NULL UNIQUE,
+  p256dh TEXT NOT NULL, auth TEXT NOT NULL,
+  prefs TEXT NOT NULL DEFAULT '{}', device TEXT NOT NULL DEFAULT '',
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  last_active TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_push_subs_endpoint ON push_subs (endpoint);
+
+CREATE TABLE IF NOT EXISTS notifications (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL, message TEXT NOT NULL DEFAULT '',
+  icon TEXT NOT NULL DEFAULT '', image TEXT NOT NULL DEFAULT '',
+  url TEXT NOT NULL DEFAULT '/', target TEXT NOT NULL DEFAULT 'all',
+  status TEXT NOT NULL DEFAULT 'sent',
+  sent_count INTEGER NOT NULL DEFAULT 0,
+  delivered_count INTEGER NOT NULL DEFAULT 0,
+  click_count INTEGER NOT NULL DEFAULT 0,
+  event_id TEXT, schedule_at TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  sent_at TEXT
+);
+
+CREATE TABLE IF NOT EXISTS notif_settings (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  global_enabled INTEGER NOT NULL DEFAULT 1,
+  new_videos INTEGER NOT NULL DEFAULT 1,
+  new_tools INTEGER NOT NULL DEFAULT 1,
+  new_templates INTEGER NOT NULL DEFAULT 1,
+  new_updates INTEGER NOT NULL DEFAULT 1,
+  announcements INTEGER NOT NULL DEFAULT 1,
+  sound INTEGER NOT NULL DEFAULT 1,
+  default_icon TEXT NOT NULL DEFAULT '/icons/icon-192.png',
+  default_url TEXT NOT NULL DEFAULT '/'
+);
+INSERT OR IGNORE INTO notif_settings (id) VALUES (1);
+```
+
+### How to test
+- **PWA install (Android/Chrome):** open site → tap Install App → Chrome native prompt → Install. Reopen = standalone, banner gone.
+- **Push:** in a Chrome tab, allow notifications (subscribes the device), then Admin → Notification Center → Send Now → device receives a push; tapping it opens the target URL.
+- **Schedule:** pick a date/time → Send Notification → stored as `scheduled` (a cron/trigger is needed to auto-fire; see notes).
+
+### Notes
+- `scheduled` notifications are stored but require a scheduler/cron to fire at the exact time (not included — see roadmap).
+- Duplicate prevention: pass an `eventId`; the API rejects a second send with the same event id.
+- Auto-notifications on new video/tool (master prompt §10–11) can hook the same `POST /api/admin/notifications` endpoint with an eventId — add the call wherever a video/tool is created.

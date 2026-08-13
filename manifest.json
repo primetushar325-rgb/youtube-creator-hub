@@ -1,0 +1,46 @@
+{
+  "name": "YouTube Creator Hub",
+  "short_name": "Creator Hub",
+  "description": "55+ AI tools for YouTube creators: titles, scripts, TTS, thumbnails, SEO, viral hashtags and more.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f0f10",
+  "theme_color": "#0f0f10",
+  "categories": ["productivity", "utilities", "education"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "All Tools",
+      "short_name": "Tools",
+      "url": "/#/tools",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Viral Hashtag Scanner",
+      "short_name": "Hashtags",
+      "url": "/",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

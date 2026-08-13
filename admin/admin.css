@@ -42,3 +42,19 @@ input:focus{border-color:var(--gold)}
 .chip{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:rgba(255,214,10,.08);color:var(--gold);font-size:13px;margin:4px}
 .chip button{background:none;border:0;color:var(--muted);cursor:pointer;font-size:14px}
 .chip button:hover{color:var(--danger)}
+
+/* Notification center */
+.notif-composer{display:flex;flex-direction:column;gap:10px}
+.notif-composer input,.notif-composer textarea,.notif-composer select{background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--fg);padding:10px 12px;border-radius:10px;font-size:13px;outline:none;width:100%}
+.notif-composer textarea{resize:vertical}
+.notif-row{display:flex;gap:8px;flex-wrap:wrap}
+.notif-row input{flex:1;min-width:140px}
+.notif-row input[type="datetime-local"]{color-scheme:dark}
+#notifHistory .row{flex-wrap:wrap}
+#notifHistory .status{font-size:11px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,.08)}
+#notifHistory .status.sent{background:rgba(61,220,132,.15);color:var(--green)}
+#notifHistory .status.failed{background:rgba(255,77,79,.15);color:var(--danger)}
+#notifHistory .status.scheduled{background:rgba(255,214,10,.15);color:var(--gold)}
+#notifSettings .toggle-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+#notifSettings .toggle-row label{font-weight:600;font-size:14px}
+#notifSettings input[type="checkbox"]{width:18px;height:18px;accent-color:var(--gold)}
