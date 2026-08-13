@@ -5,5 +5,8 @@
   "scripts": {
     "db:migrate": "node scripts/migrate.js",
     "db:setup-admin": "node scripts/setup-admin.js"
+  },
+  "dependencies": {
+    "web-push": "^3.6.7"
   }
 }

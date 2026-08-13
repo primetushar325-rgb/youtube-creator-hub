@@ -1,0 +1,73 @@
+/* ============================================================
+   PWA + Notifications UI (black/gold theme)
+   ============================================================ */
+
+/* Install banner (fixed top) */
+.ych-install-banner{
+  position:fixed;top:0;left:0;right:0;z-index:9000;
+  display:flex;align-items:center;gap:10px;
+  background:rgba(15,15,16,.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,214,10,.25);
+  color:#f5f3ea;padding:10px 14px;
+  transform:translateY(-110%);transition:transform .35s cubic-bezier(.2,.8,.3,1);
+  font-size:14px;
+}
+.ych-install-banner.show{transform:translateY(0)}
+.ych-install-ic{font-size:22px}
+.ych-install-txt{flex:1;min-width:0}
+.ych-install-txt b{display:block;font-size:14px}
+.ych-install-txt span{display:block;font-size:12px;color:#a8a49a;line-height:1.3}
+.ych-install-btn{
+  background:var(--vh-gold,#ffd60a);color:#0b0b0d;border:0;padding:9px 14px;
+  border-radius:10px;font-weight:700;font-size:13px;white-space:nowrap;cursor:pointer;
+}
+.ych-install-x{background:none;border:0;color:#a8a49a;font-size:20px;cursor:pointer;padding:2px 6px}
+.ych-install-x:hover{color:#fff}
+
+/* Install fallback toast */
+.ych-install-toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:#0f0f10;border:1px solid var(--vh-gold,#ffd60a);color:#f5f3ea;
+  padding:12px 20px;border-radius:14px;font-size:13px;z-index:9500;max-width:90vw;
+  text-align:center;opacity:0;pointer-events:none;transition:.3s;
+}
+.ych-install-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Notification permission prompt */
+.ych-notif-prompt{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  width:min(92vw,380px);background:rgba(15,15,16,.96);border:1px solid var(--vh-gold,#ffd60a);
+  border-radius:18px;padding:20px;color:#f5f3ea;z-index:9600;
+  box-shadow:0 12px 50px rgba(0,0,0,.6);text-align:center;
+  animation:ychNotifIn .35s ease both;
+}
+.ych-notif-prompt.hide{animation:ychNotifOut .3s ease both}
+@keyframes ychNotifIn{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+@keyframes ychNotifOut{from{opacity:1}to{opacity:0;transform:translateX(-50%) translateY(20px)}}
+.ych-notif-ic{font-size:34px;margin-bottom:6px}
+.ych-notif-prompt h3{margin:0 0 6px;font-size:17px}
+.ych-notif-prompt p{margin:0 0 16px;color:#a8a49a;font-size:13px;line-height:1.5}
+.ych-notif-actions{display:flex;gap:8px;flex-direction:column}
+.ych-notif-allow{background:var(--vh-gold,#ffd60a);color:#0b0b0d;border:0;padding:11px;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer}
+.ych-notif-later{background:transparent;border:1px solid rgba(255,255,255,.2);color:#a8a49a;padding:9px;border-radius:10px;font-size:13px;cursor:pointer}
+.ych-notif-later:hover{color:#fff}
+
+/* Bell control */
+.ych-bell{
+  width:38px;height:38px;border-radius:10px;border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.03);font-size:18px;cursor:pointer;display:inline-flex;
+  align-items:center;justify-content:center;
+}
+.ych-bell-fixed{position:fixed;bottom:84px;right:16px;z-index:9000}
+
+/* Notification settings modal */
+.ych-notif-modal{position:fixed;inset:0;z-index:9700;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px}
+.ych-notif-modal-card{width:min(92vw,400px);background:rgba(15,15,16,.98);border:1px solid rgba(255,214,10,.3);border-radius:18px;color:#f5f3ea;overflow:hidden;animation:ychNotifIn .3s ease both}
+.ych-notif-modal-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.1)}
+.ych-notif-modal-head b{font-size:15px}
+.ych-notif-modal-x{background:none;border:0;color:#a8a49a;font-size:20px;cursor:pointer}
+.ych-notif-modal-body{padding:16px 18px;display:flex;flex-direction:column;gap:4px}
+.ych-setting{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.ych-setting b{font-size:14px}
+.ych-setting input{width:20px;height:20px;accent-color:var(--vh-gold,#ffd60a)}
+.ych-notif-save{margin-top:14px;background:var(--vh-gold,#ffd60a);color:#0b0b0d;border:0;padding:11px;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer}

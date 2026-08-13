@@ -62,3 +62,50 @@ CREATE TABLE IF NOT EXISTS analytics_history (
 INSERT OR IGNORE INTO admins (username, password_hash)
 SELECT 'admin', 'CHANGE_ME'
 WHERE NOT EXISTS (SELECT 1 FROM admins WHERE username = 'admin');
+
+-- Push notification subscriptions
+CREATE TABLE IF NOT EXISTS push_subs (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  endpoint TEXT NOT NULL UNIQUE,
+  p256dh TEXT NOT NULL,
+  auth TEXT NOT NULL,
+  prefs TEXT NOT NULL DEFAULT '{}',
+  device TEXT NOT NULL DEFAULT '',
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  last_active TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_push_subs_endpoint ON push_subs (endpoint);
+
+-- Notification records (history)
+CREATE TABLE IF NOT EXISTS notifications (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  message TEXT NOT NULL DEFAULT '',
+  icon TEXT NOT NULL DEFAULT '',
+  image TEXT NOT NULL DEFAULT '',
+  url TEXT NOT NULL DEFAULT '/',
+  target TEXT NOT NULL DEFAULT 'all',     -- all | installed | subscribed
+  status TEXT NOT NULL DEFAULT 'sent',    -- draft | scheduled | sent | failed
+  sent_count INTEGER NOT NULL DEFAULT 0,
+  delivered_count INTEGER NOT NULL DEFAULT 0,
+  click_count INTEGER NOT NULL DEFAULT 0,
+  event_id TEXT,                          -- unique event for duplicate prevention
+  schedule_at TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  sent_at TEXT
+);
+
+-- Notification settings (global admin prefs)
+CREATE TABLE IF NOT EXISTS notif_settings (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  global_enabled INTEGER NOT NULL DEFAULT 1,
+  new_videos INTEGER NOT NULL DEFAULT 1,
+  new_tools INTEGER NOT NULL DEFAULT 1,
+  new_templates INTEGER NOT NULL DEFAULT 1,
+  new_updates INTEGER NOT NULL DEFAULT 1,
+  announcements INTEGER NOT NULL DEFAULT 1,
+  sound INTEGER NOT NULL DEFAULT 1,
+  default_icon TEXT NOT NULL DEFAULT '/icons/icon-192.png',
+  default_url TEXT NOT NULL DEFAULT '/'
+);
+INSERT OR IGNORE INTO notif_settings (id) VALUES (1);
