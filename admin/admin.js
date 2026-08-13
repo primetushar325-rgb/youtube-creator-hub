@@ -27,7 +27,7 @@
     const err = $("#loginErr");
     if (!username || !password) { err.textContent = "Enter username and password."; err.hidden = false; return; }
     err.hidden = true;
-    const { status, json } = await api("/api/admin/login", {
+    const { status, json } = await api("/api/admin?action=login", {
       method: "POST",
       body: JSON.stringify({ username, password }),
     });
@@ -43,7 +43,7 @@
 
   // ---------- Dashboard ----------
   async function loadDash() {
-    const { status, json } = await api("/api/admin/dashboard");
+    const { status, json } = await api("/api/admin?action=dashboard");
     if (status !== 200) {
       if (status === 401) { show("login"); return; }
       $("#statCards").innerHTML = `<div class="card">Could not load: ${json.error || "error"}</div>`;
@@ -86,7 +86,7 @@
 
   // ---------- Channels ----------
   async function loadChannels() {
-    const { status, json } = await api("/api/admin/channels");
+    const { status, json } = await api("/api/admin?action=channels");
     if (status !== 200) return;
     const list = $("#chanList");
     list.innerHTML = json.length
@@ -94,7 +94,7 @@
       : '<p class="muted small">No tracked channels.</p>';
     list.querySelectorAll("[data-del]").forEach((b) =>
       b.addEventListener("click", async () => {
-        await api("/api/admin/channels", { method: "DELETE", body: JSON.stringify({ id: +b.dataset.del }) });
+        await api("/api/admin?action=channels", { method: "DELETE", body: JSON.stringify({ id: +b.dataset.del }) });
         loadChannels();
       })
     );
@@ -102,14 +102,14 @@
   $("#chanAdd").addEventListener("click", async () => {
     const name = $("#chanInput").value.trim();
     if (!name) return;
-    await api("/api/admin/channels", { method: "POST", body: JSON.stringify({ name }) });
+    await api("/api/admin?action=channels", { method: "POST", body: JSON.stringify({ name }) });
     $("#chanInput").value = "";
     loadChannels();
   });
 
   // ---------- Trends ----------
   async function loadTrends() {
-    const { status, json } = await api("/api/admin/trends");
+    const { status, json } = await api("/api/admin?action=trends");
     if (status !== 200) return;
     const list = $("#trendList");
     list.innerHTML = json.length
@@ -117,7 +117,7 @@
       : '<p class="muted small">No saved trends yet.</p>';
     list.querySelectorAll("[data-del]").forEach((b) =>
       b.addEventListener("click", async () => {
-        await api("/api/admin/trends", { method: "DELETE", body: JSON.stringify({ id: +b.dataset.del }) });
+        await api("/api/admin?action=trends", { method: "DELETE", body: JSON.stringify({ id: +b.dataset.del }) });
         loadTrends();
       })
     );
@@ -125,7 +125,7 @@
 
   // ---------- Notification Center ----------
   async function loadNotifHistory() {
-    const { status, json } = await api("/api/admin/notifications");
+    const { status, json } = await api("/api/admin?action=notifications");
     const box = $("#notifHistory");
     if (status !== 200) { box.innerHTML = `<p class="muted small">${json.error || "Could not load"}</p>`; return; }
     box.innerHTML = json.length ? json.map(n => `<div class="row">
@@ -138,7 +138,7 @@
   }
 
   async function loadNotifSettings() {
-    const { status, json } = await api("/api/admin/notif-settings");
+    const { status, json } = await api("/api/admin?action=notif-settings");
     const box = $("#notifSettings");
     if (status !== 200) { box.innerHTML = `<p class="muted small">${json.error || "Could not load"}</p>`; return; }
     const fields = [
@@ -154,7 +154,7 @@
     box.querySelectorAll("input[type=checkbox]").forEach(cb => cb.addEventListener("change", () => {
       const payload = {};
       payload[cb.dataset.skey] = cb.checked;
-      api("/api/admin/notif-settings", { method: "POST", body: JSON.stringify(payload) }).then(() => {
+      api("/api/admin?action=notif-settings", { method: "POST", body: JSON.stringify(payload) }).then(() => {
         // update the result span via toast
       });
     }));
@@ -173,7 +173,7 @@
     const err = $("#notifResult");
     if (!payload.title) { err.textContent = "Title is required."; err.hidden = false; return; }
     err.hidden = true;
-    api("/api/admin/notifications", { method: "POST", body: JSON.stringify(payload) }).then(({ status, json }) => {
+    api("/api/admin?action=notifications", { method: "POST", body: JSON.stringify(payload) }).then(({ status, json }) => {
       if (status === 200) {
         err.hidden = true;
         if (json.duplicate) { err.textContent = json.message; err.hidden = false; }

@@ -145,7 +145,7 @@
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(await getVapidKey())
       });
-      await fetch("/api/push/subscribe", {
+      await fetch("/api/push?type=subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -160,7 +160,7 @@
 
   async function getVapidKey() {
     try {
-      const res = await fetch("/api/push/vapid-public");
+      const res = await fetch("/api/push?type=vapid-public");
       const d = await res.json();
       return d.key || "";
     } catch (e) { return ""; }
@@ -221,7 +221,7 @@
       };
       ls.set("ych_notif_prefs", prefs);
       try {
-        await fetch("/api/push/prefs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ prefs }) }).catch(() => {});
+        await fetch("/api/push?type=prefs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ prefs }) }).catch(() => {});
       } catch (e) {}
       m.remove();
       // simple toast

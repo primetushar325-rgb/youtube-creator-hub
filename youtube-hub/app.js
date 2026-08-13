@@ -16,10 +16,10 @@
     try{ let id=localStorage.getItem("ych_visitor_id"); if(!id){ id="v_"+Math.random().toString(36).slice(2)+Date.now().toString(36); localStorage.setItem("ych_visitor_id",id);} return id; }catch(e){ return ""; }
   }
   function trackVisit(){
-    try{ fetch("/api/track/visit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({visitorId:getVisitorId(),pagePath:location.pathname+location.hash,referrer:document.referrer||""}),keepalive:true}).catch(()=>{}); }catch(e){}
+    try{ fetch("/api/track?type=visit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({visitorId:getVisitorId(),pagePath:location.pathname+location.hash,referrer:document.referrer||""}),keepalive:true}).catch(()=>{}); }catch(e){}
   }
   function trackToolUse(toolId, toolTitle, action){
-    try{ fetch("/api/track/use",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({toolId,toolTitle,visitorId:getVisitorId(),action}),keepalive:true}).catch(()=>{}); }catch(e){}
+    try{ fetch("/api/track?type=use",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({toolId,toolTitle,visitorId:getVisitorId(),action}),keepalive:true}).catch(()=>{}); }catch(e){}
   }
 
   // ---------- Utilities ----------
