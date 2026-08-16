@@ -286,7 +286,7 @@
       out.innerHTML=`
         <div class="vh-glass-card" style="text-align:center">
           <div class="vh-gauge">
-            <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="10"/><circle cx="60" cy="60" r="52" fill="none" stroke="#ffd60a" stroke-width="10" stroke-linecap="round" stroke-dasharray="${gaugeDeg} 360"/></svg>
+            <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="10"/><circle cx="60" cy="60" r="52" fill="none" stroke="#1ed760" stroke-width="10" stroke-linecap="round" stroke-dasharray="${gaugeDeg} 360"/></svg>
             <div class="vh-g-num"><b>${score}</b><span>Viral Score</span></div>
           </div>
           <h3 style="color:var(--vh-gold)">${h}</h3>

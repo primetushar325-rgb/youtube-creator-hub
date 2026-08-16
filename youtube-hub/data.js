@@ -48,23 +48,43 @@
     outro:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4"/><path d="M4 20h16"/><path d="m8 16 4-4 4 4"/></svg>',
     sum:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16M4 12h16M4 19h10"/></svg>',
     key:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M15 8l2 2"/></svg>',
-    ratio:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>'
+    ratio:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>',
+    split:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="7" height="14" rx="2"/><rect x="14" y="5" width="7" height="14" rx="2"/><path d="M12 3v18" stroke-dasharray="2 3"/></svg>',
+    layers:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 17l9 5 9-5"/></svg>',
+    scissors:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1 20 20M8.1 15.9 20 4M14.5 14.5l-2.5-2.5"/></svg>',
+    target:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg>',
+    pulse:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-7 4 14 2-7h6"/></svg>',
+    bars:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-6"/></svg>',
+    megaphone:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 14-6v14L3 13v-2Z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6M17 8a5 5 0 0 1 0 8"/></svg>',
+    poll:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h12M4 5v3h12V5M4 12h16M4 12v3h16v-3M4 19h8v-3H4v3Z"/></svg>',
+    help:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.7 2.2c-.8.5-1.2 1-1.2 1.8v.5"/><path d="M12 17h.01"/></svg>',
+    shield:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 9.3 8 11 4.6-1.7 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>',
+    live:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7M5.6 5.6a9 9 0 0 0 0 12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></svg>',
+    play:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m10 8.5 6 3.5-6 3.5v-7Z"/></svg>',
+    briefcase:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg>',
+    pen:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3Z"/></svg>',
+    news:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13a2 2 0 0 1 2 2v13H6a2 2 0 0 1-2-2V4Z"/><path d="M19 19a2 2 0 0 0 2-2V8h-2M8 8h5M8 12h7M8 16h7"/></svg>',
+    badge:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-2 8 5.5-3 5.5 3-2-8"/></svg>',
+    timer:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4M9 2h6M19 5l1.5 1.5"/></svg>',
+    ruler:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="20" height="6" rx="1" transform="rotate(-20 12 12)"/><path d="m8 12.5 1 2.7M12 11l1 2.7M16 9.5l1 2.7"/></svg>',
+    type:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h16v2M12 5v14M9 19h6"/></svg>',
+    calcpad:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h.01M12 19h.01M16 19h.01"/></svg>'
   };
 
   // ---- Categories (with accent colors) ----
   const CATEGORIES = [
-    { id:"titles", name:"Titles & Metadata", icon:I.title, color:"#f5a623" },
+    { id:"titles", name:"Titles & Metadata", icon:I.title, color:"#1ed760" },
     { id:"script", name:"Scripts & Content", icon:I.script, color:"#06b6d4" },
     { id:"audio", name:"Audio & Voice", icon:I.voice, color:"#d946ef" },
     { id:"visual", name:"Thumbnails & Visuals", icon:I.thumb, color:"#f97316" },
     { id:"growth", name:"Growth & Strategy", icon:I.trend, color:"#10b981" },
     { id:"community", name:"Engagement & Community", icon:I.community, color:"#ef4444" },
-    { id:"money", name:"Monetization & Business", icon:I.dollar, color:"#84cc16" },
+    { id:"money", name:"Monetization & Business", icon:I.dollar, color:"#a3e635" },
     { id:"repurpose", name:"Repurposing & Multi-platform", icon:I.link, color:"#8b5cf6" },
-    { id:"calc", name:"Calculators", icon:I.dollar, color:"#6366f1" },
+    { id:"calc", name:"Calculators", icon:I.calcpad, color:"#818cf8" },
     { id:"production", name:"Planning & Production", icon:I.camera, color:"#14b8a6" },
     { id:"translate", name:"Translation & Accessibility", icon:I.translate, color:"#0ea5e9" },
-    { id:"ai", name:"Ask AI", icon:I.bot, color:"#000000" }
+    { id:"ai", name:"Ask AI", icon:I.bot, color:"#f472b6" }
   ];
 
   // ---- Tools ----
@@ -75,7 +95,7 @@
     { id:"tag-gen", title:"Tag Generator", cat:"titles", icon:I.tag, bangla:"র‍্যাংকের জন্য প্রাসঙ্গিক ট্যাগ" },
     { id:"hashtag-gen", title:"Hashtag Generator", cat:"titles", icon:I.hash, bangla:"শর্টস ও সোশ্যাল হ্যাশট্যাগ" },
     { id:"seo-keywords", title:"SEO Keyword Research", cat:"titles", icon:I.key, bangla:"কী-ওয়ার্ড রিসার্চ" },
-    { id:"ab-title", title:"A/B Title Tester", cat:"titles", icon:I.ratio, bangla:"দুটি টাইটেল তুলনা করুন" },
+    { id:"ab-title", title:"A/B Title Tester", cat:"titles", icon:I.split, bangla:"দুটি টাইটেল তুলনা করুন" },
 
     // SCRIPTING & CONTENT
     { id:"long-script", title:"Long-Form Script Generator", cat:"script", icon:I.script, bangla:"দীর্ঘ ভিডিও স্ক্রিপ্ট", featured:true },
@@ -89,11 +109,11 @@
     { id:"tts", title:"Text to Speech", cat:"audio", icon:I.voice, bangla:"টেক্সট পড়ে শোনান", featured:true },
     { id:"stt-mic", title:"Speech to Text (Mic)", cat:"audio", icon:I.mic, bangla:"মাইক্রোফোন দিয়ে লিখুন" },
     { id:"stt-file", title:"Speech to Text (File)", cat:"audio", icon:I.file, bangla:"অডিও ফাইল ট্রান্সক্রিপ্ট" },
-    { id:"pacing-check", title:"Voiceover Pacing Checker", cat:"audio", icon:I.clock, bangla:"বক্তব্যের সময় হিসাব" },
+    { id:"pacing-check", title:"Voiceover Pacing Checker", cat:"audio", icon:I.timer, bangla:"বক্তব্যের সময় হিসাব" },
 
     // VISUAL & THUMBNAIL
     { id:"thumb-idea", title:"Thumbnail Idea Generator", cat:"visual", icon:I.thumb, bangla:"থাম্বনেইল কনসেপ্ট", featured:true },
-    { id:"thumb-text", title:"Thumbnail Text Overlay", cat:"visual", icon:I.image, bangla:"থাম্বনেইলে টেক্সট" },
+    { id:"thumb-text", title:"Thumbnail Text Overlay", cat:"visual", icon:I.type, bangla:"থাম্বনেইলে টেক্সট" },
     { id:"image-prompt", title:"Image Prompt Generator", cat:"visual", icon:I.image, bangla:"AI ইমেজ প্রম্পট" },
     { id:"banner-concepts", title:"Channel Banner Concepts", cat:"visual", icon:I.ratio, bangla:"ব্যানার ডিজাইন কনসেপ্ট" },
 
@@ -101,33 +121,33 @@
     { id:"content-cal", title:"Content Calendar Generator", cat:"growth", icon:I.cal, bangla:"৪-সপ্তাহের কন্টেন্ট প্ল্যান", featured:true },
     { id:"video-ideas", title:"Video Idea Generator", cat:"growth", icon:I.idea, bangla:"১০টি ভিডিও আইডিয়া" },
     { id:"trending-finder", title:"Trending Topic Finder", cat:"growth", icon:I.trend, bangla:"ট্রেন্ডিং অ্যাঙ্গেল" },
-    { id:"competitor-analyzer", title:"Competitor Analysis Helper", cat:"growth", icon:I.chart, bangla:"প্রতিযোগী বিশ্লেষণ" },
-    { id:"niche-finder", title:"Niche Finder", cat:"growth", icon:I.idea, bangla:"উপযুক্ত নিচ খুঁজুন" },
-    { id:"community-post", title:"Community Post Generator", cat:"growth", icon:I.community, bangla:"কমিউনিটি পোস্ট" },
+    { id:"competitor-analyzer", title:"Competitor Analysis Helper", cat:"growth", icon:I.bars, bangla:"প্রতিযোগী বিশ্লেষণ" },
+    { id:"niche-finder", title:"Niche Finder", cat:"growth", icon:I.target, bangla:"উপযুক্ত নিচ খুঁজুন" },
+    { id:"community-post", title:"Community Post Generator", cat:"growth", icon:I.megaphone, bangla:"কমিউনিটি পোস্ট" },
 
     // ENGAGEMENT & COMMUNITY
     { id:"comment-reply", title:"Comment Reply Generator", cat:"community", icon:I.comment, bangla:"কমেন্টের জবাব" },
     { id:"pinned-comment", title:"Pinned Comment Generator", cat:"community", icon:I.pin, bangla:"পিন করা কমেন্ট" },
-    { id:"live-title", title:"Live Stream Title & Desc", cat:"community", icon:I.camera, bangla:"লাইভ টাইটেল ও বিবরণ" },
-    { id:"poll-gen", title:"Poll Question Generator", cat:"community", icon:I.community, bangla:"পোল প্রশ্ন" },
+    { id:"live-title", title:"Live Stream Title & Desc", cat:"community", icon:I.live, bangla:"লাইভ টাইটেল ও বিবরণ" },
+    { id:"poll-gen", title:"Poll Question Generator", cat:"community", icon:I.poll, bangla:"পোল প্রশ্ন" },
 
     // MONETIZATION & BUSINESS
     { id:"sponsor-email", title:"Sponsorship Pitch Email", cat:"money", icon:I.email, bangla:"স্পনসর পিচ ইমেইল" },
-    { id:"media-kit", title:"Media Kit Content", cat:"money", icon:I.file, bangla:"মিডিয়া কিট কপি" },
+    { id:"media-kit", title:"Media Kit Content", cat:"money", icon:I.briefcase, bangla:"মিডিয়া কিট কপি" },
     { id:"merch-ideas", title:"Merch Idea Generator", cat:"money", icon:I.gift, bangla:"মার্চ কনসেপ্ট" },
-    { id:"membership-perks", title:"Membership Perks Generator", cat:"money", icon:I.sparkle, bangla:"মেম্বারশিপ পার্কস" },
+    { id:"membership-perks", title:"Membership Perks Generator", cat:"money", icon:I.badge, bangla:"মেম্বারশিপ পার্কস" },
 
     // REPURPOSING & MULTI-PLATFORM
-    { id:"shorts-repurpose", title:"YouTube-to-Shorts Repurposing", cat:"repurpose", icon:I.shorts, bangla:"লং ভিডিও থেকে শর্টস" },
+    { id:"shorts-repurpose", title:"YouTube-to-Shorts Repurposing", cat:"repurpose", icon:I.scissors, bangla:"লং ভিডিও থেকে শর্টস" },
     { id:"caption-gen", title:"Cross-Platform Caption Generator", cat:"repurpose", icon:I.globe, bangla:"Instagram/TikTok ক্যাপশন" },
-    { id:"blog-from-video", title:"Blog Post from Video", cat:"repurpose", icon:I.file, bangla:"ভিডিও থেকে ব্লগ" },
-    { id:"newsletter-blurb", title:"Newsletter Segment Generator", cat:"repurpose", icon:I.email, bangla:"নিউজলেটার ব্লার্ব" },
+    { id:"blog-from-video", title:"Blog Post from Video", cat:"repurpose", icon:I.pen, bangla:"ভিডিও থেকে ব্লগ" },
+    { id:"newsletter-blurb", title:"Newsletter Segment Generator", cat:"repurpose", icon:I.news, bangla:"নিউজলেটার ব্লার্ব" },
 
     // ANALYTICS & CALCULATORS
     { id:"earn-calc", title:"YouTube Earnings Calculator", cat:"calc", icon:I.dollar, bangla:"ইনকাম হিসাব", featured:true },
     { id:"watchtime-calc", title:"Watch Time Calculator", cat:"calc", icon:I.clock, bangla:"ওয়াচ আওয়ার হিসাব" },
     { id:"growth-rate-calc", title:"Subscriber Growth Calculator", cat:"calc", icon:I.growth, bangla:"সাবস্ক্রাইবার বৃদ্ধি" },
-    { id:"length-optimizer", title:"Video Length Optimizer", cat:"calc", icon:I.clock, bangla:"আদর্শ ভিডিও দৈর্ঘ্য" },
+    { id:"length-optimizer", title:"Video Length Optimizer", cat:"calc", icon:I.ruler, bangla:"আদর্শ ভিডিও দৈর্ঘ্য" },
 
     // PLANNING & PRODUCTION
     { id:"shot-list", title:"Shot List Generator", cat:"production", icon:I.camera, bangla:"শুটিং শট লিস্ট" },
@@ -142,13 +162,13 @@
     { id:"ask-ai", title:"Ask AI (Premium)", cat:"ai", icon:I.bot, bangla:"যেকোনো প্রশ্নের উত্তর", featured:true },
 
     // ADVANCED STRATEGY (new)
-    { id:"retention-advisor", title:"Retention Curve Advisor", cat:"growth", icon:I.trend, bangla:"রিটেনশন ড্রপ বিশ্লেষণ" },
-    { id:"channel-trailer", title:"Channel Trailer Script", cat:"script", icon:I.camera, bangla:"নতুন দর্শকের জন্য ট্রেইলার" },
+    { id:"retention-advisor", title:"Retention Curve Advisor", cat:"growth", icon:I.pulse, bangla:"রিটেনশন ড্রপ বিশ্লেষণ" },
+    { id:"channel-trailer", title:"Channel Trailer Script", cat:"script", icon:I.play, bangla:"নতুন দর্শকের জন্য ট্রেইলার" },
     { id:"end-screen", title:"End Screen / Outro Script", cat:"script", icon:I.outro, bangla:"ভিডিওর শেষ ১৫-২০ সেকেন্ড" },
-    { id:"series-naming", title:"Series Naming Generator", cat:"titles", icon:I.structure, bangla:"সিরিজের পর্বের নাম" },
+    { id:"series-naming", title:"Series Naming Generator", cat:"titles", icon:I.layers, bangla:"সিরিজের পর্বের নাম" },
     { id:"brand-voice", title:"Brand Voice Guide", cat:"community", icon:I.sparkle, bangla:"টোন-অফ-ভয়েস গাইড" },
-    { id:"faq-generator", title:"Q&A / FAQ Generator", cat:"community", icon:I.community, bangla:"ভিডিওর FAQ" },
-    { id:"chat-moderation", title:"Live Chat Moderation Templates", cat:"community", icon:I.chat, bangla:"লাইভ চ্যাট রেসপন্স" }
+    { id:"faq-generator", title:"Q&A / FAQ Generator", cat:"community", icon:I.help, bangla:"ভিডিওর FAQ" },
+    { id:"chat-moderation", title:"Live Chat Moderation Templates", cat:"community", icon:I.shield, bangla:"লাইভ চ্যাট রেসপন্স" }
   ];
 
   window.YTHUB_DATA = {

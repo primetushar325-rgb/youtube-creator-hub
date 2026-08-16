@@ -1,8 +1,8 @@
 /* ============================================================
    Service Worker — PWA caching + Web Push notifications
    ============================================================ */
-const CACHE = "ych-v1";
-const CORE_ASSETS = ["/", "/index.html", "/manifest.json", "/styles.css", "/app.js", "/data.js", "/toolfields.js"];
+const CACHE = "ych-v2-green";
+const CORE_ASSETS = ["/", "/index.html", "/manifest.json", "/styles.css", "/app.js", "/data.js", "/prompts.js", "/toolfields.js"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
