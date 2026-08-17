@@ -113,10 +113,24 @@
       app.insertBefore(sec, app.firstChild);
       $$("[data-rid]",sec).forEach(b=>b.addEventListener("click",()=>navigate("#/tool?id="+b.dataset.rid)));
     }
+    function catSectionHTML(c){
+      const list=D.tools.filter(t=>t.cat===c.id);
+      if(!list.length) return "";
+      return `<section class="cat-section">
+        <div class="cs-head" style="--cat:${c.color}">
+          <span class="cs-icon">${c.icon}</span>
+          <h2>${esc(c.name)}</h2>
+          <span class="cs-count">${list.length} tools</span>
+        </div>
+        <div class="tool-row">${list.map(toolCardHTML).join("")}</div>
+      </section>`;
+    }
     function draw(){
       const active=chips.dataset.active||"all";
-      const list=D.tools.filter(t=>active==="all"||t.cat===active);
-      grid.innerHTML=list.map(toolCardHTML).join(""); bindToolCards(grid);
+      grid.className="cat-sections";
+      const cats = active==="all" ? D.categories : D.categories.filter(c=>c.id===active);
+      grid.innerHTML=cats.map(catSectionHTML).join("");
+      bindToolCards(grid);
       animateCards(grid);
     }
     // Horizontal scrollable category cards (icon + per-category accent)
@@ -127,7 +141,7 @@
       `<button class="cat-card active" data-cat="all" style="--cat:#1ed760"><span class="cc-icon">${allIcon}</span><span class="cc-name">All Tools</span><span class="cc-count">${D.tools.length}</span></button>`+
       D.categories.map(c=>`<button class="cat-card" data-cat="${c.id}" style="--cat:${c.color}"><span class="cc-icon">${c.icon}</span><span class="cc-name">${esc(c.name)}</span><span class="cc-count">${countFor(c.id)}</span></button>`).join("");
     chips.dataset.active="all";
-    $$(".cat-card",chips).forEach(c=>c.addEventListener("click",()=>{ $$(".cat-card",chips).forEach(x=>x.classList.remove("active")); c.classList.add("active"); chips.dataset.active=c.dataset.cat; c.scrollIntoView({behavior:"smooth",block:"nearest",inline:"center"}); draw(); }));
+    $$(".cat-card",chips).forEach(c=>c.addEventListener("click",()=>{ $$(".cat-card",chips).forEach(x=>x.classList.remove("active")); c.classList.add("active"); chips.dataset.active=c.dataset.cat; draw(); try{ c.scrollIntoView({behavior:"smooth",block:"nearest",inline:"center"}); }catch(e){} }));
     draw();
   }
   function animateCards(root){
@@ -464,7 +478,7 @@
   function closeModal(){ $("#modalRoot").innerHTML=""; }
 
   // ---------- Favorites list ----------
-  function renderList(type){ const tpl=$("#tpl-tools").content.cloneNode(true); app.appendChild(tpl); $("#catChips").style.display="none"; $("#toolsGrid").innerHTML=D.tools.filter(t=>D.favorites.includes(t.id)).map(toolCardHTML).join(""); bindToolCards($("#toolsGrid")); const head=$(".page-head h1"); if(head) head.textContent="Favorites"; }
+  function renderList(type){ const tpl=$("#tpl-tools").content.cloneNode(true); app.appendChild(tpl); $("#catChips").style.display="none"; const grid=$("#toolsGrid"); const favs=D.tools.filter(t=>D.favorites.includes(t.id)); grid.className="grid grid-4"; grid.innerHTML=favs.length?favs.map(toolCardHTML).join(""):'<p class="muted">No favorites yet — tap the ♥ on any tool card.</p>'; bindToolCards(grid); animateCards(grid); const head=$(".page-head h1"); if(head) head.textContent="Favorites"; const sub=$(".page-head p"); if(sub) sub.textContent="Your hearted tools, all in one place."; }
 
   // ---------- Ask AI ----------
   function renderAskAI(){ const tpl=$("#tpl-askai").content.cloneNode(true); app.appendChild(tpl);
